@@ -2,7 +2,7 @@ import { IMG_PATH } from "./const";
 
 export class MapManager 
 {
-    constructor() 
+    constructor(playgroundMapSelector) 
     {
         this.mapData = null;
         this.tileLayers = null;
@@ -13,6 +13,26 @@ export class MapManager
         this.tilesets = new Array();
 
         this.jsonLoaded = false;
+
+        this.view = {
+            x: 0,
+            y: 0,
+            w: 800,
+            h: 600
+        };
+
+        this.map_canvas = document.querySelector('.playground_map');
+    }
+
+    render()
+    {
+        this.map_canvas.width = this.mapSize.x;
+        this.map_canvas.height = this.mapSize.y;
+
+        this.map_canvas.style.width = `${this.mapSize.x}px`;
+        this.map_canvas.style.height = `${this.mapSize.y}px`;
+
+        this.draw(this.map_canvas, this.map_canvas.getContext('2d'));
     }
 
     parseMap(tilesParsedJSON)
@@ -49,5 +69,76 @@ export class MapManager
         }
 
         this.jsonLoaded = true; // когда разобран весь json
+    }
+
+    draw(canvas, context)
+    {
+        if(!this.jsonLoaded)
+        {
+            setTimeout(function() {this.draw(ctx);}, 100);
+        }
+        else 
+        {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            // проходимся по всем слоям
+            for(let idx = 0; idx < this.tileLayers.length; idx++)
+            {
+                if(idx === 0) // отрисуем пока что только первый слой floor
+                {
+                    for(let pixel_number = 0; pixel_number < this.tileLayers[idx].data.length; pixel_number++)
+                    {
+                        if(this.tileLayers[idx].data[pixel_number] !== 0) // если хоть что-то записано
+                        {
+                            let tile = this.getTile(this.tileLayers[idx].data[pixel_number]);
+
+                            let currentX = (pixel_number % this.xCount) * this.tileSize.x;
+                            let currentY = Math.floor(pixel_number / this.xCount) * this.tileSize.y;
+                            
+                            let tsx = this.tileSize.x;
+                            let tsy = this.tileSize.y;
+                            tile.img.addEventListener("load", function() {
+                                context.drawImage(tile.img, tile.x, tile.y, tsx, tsy,
+                                    currentX, currentY, tsx, tsy);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    getTile(tileIdx)
+    {
+        let tile = {
+            img: null,
+            x: 0,
+            y: 0
+        }
+
+        let tileset = this.getTileset(tileIdx);
+        tile.img = tileset.image;
+
+        let id = tileIdx - tileset.firstgid;
+        let x = id % tileset.xCount;
+        let y = Math.floor(id / tileset.xCount);
+
+        tile.x = x * this.tileSize.x;
+        tile.y = y * this.tileSize.y;
+
+        return tile;
+    }
+
+    getTileset(tileIdx)
+    {
+        for(let idx = this.tilesets.length - 1; idx >= 0; idx--)
+        {
+            if(this.tilesets[idx].firstgid <= tileIdx)
+            {
+                return this.tilesets[idx];
+            }
+        }
+        return null;
     }
 }

@@ -17,6 +17,7 @@ class Engine
     {
         await this.loadMap(MAP_PATH).then((json) => this.mapManager.parseMap(json));
         console.log(this.mapManager);
+        this.mapManager.render();
     }
 
     async loadMap(path) 
