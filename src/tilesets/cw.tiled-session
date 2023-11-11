@@ -1,0 +1,71 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "level1.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "bonus.tsx": {
+            "scaleInDock": 1
+        },
+        "floor.tsx": {
+            "scaleInDock": 1
+        },
+        "interior1.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "level1.json": {
+            "scale": 0.5096354166666667,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 480.7358201328565,
+                "y": 902.6060296371998
+            }
+        },
+        "level1.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 403.5,
+                "y": 493
+            }
+        },
+        "level1.tmx#bonus": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "level1.tmx#floor": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "level1.tmx#interior1": {
+            "scaleInDock": 0.75,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "C:/5_sem/WEB/cw/src/tilesets",
+    "last.imagePath": "C:/5_sem/WEB/cw/src/tilesets/img",
+    "map.lastUsedExportFilter": "JSON map-файлы (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 48,
+    "map.tileWidth": 48,
+    "map.width": 20,
+    "openFiles": [
+        "level1.tmx"
+    ],
+    "project": "cw.tiled-project",
+    "recentFiles": [
+        "level1.tmx",
+        "level1.json",
+        "interior1.tsx"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.tileSize": {
+        "height": 48,
+        "width": 48
+    }
+}
