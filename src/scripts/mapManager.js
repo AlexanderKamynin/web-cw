@@ -1,10 +1,12 @@
 import { IMG_PATH } from "./const";
+import { SpriteManager } from "./spriteManager";
 
 //
 export class MapManager 
 {
-    constructor(playgroundMapSelector) 
+    constructor(spriteManager) 
     {
+        this.SpriteManager = spriteManager;
         this.mapData = null;
         this.tileLayers = null;
         this.xCount = 0;
@@ -25,61 +27,51 @@ export class MapManager
         this.map_canvas = document.querySelector('.playground_map');
     }
 
-    render()
+    render(gameObjs=null)
     {
         this.map_canvas.width = this.mapSize.x;
         this.map_canvas.height = this.mapSize.y;
 
         this.map_canvas.style.width = `${this.mapSize.x}px`;
         this.map_canvas.style.height = `${this.mapSize.y}px`;
-
-        this.draw(this.map_canvas, this.map_canvas.getContext('2d'));
+        
+        this.drawFloor(this.map_canvas, this.map_canvas.getContext('2d'));
+        this.drawInterior(this.map_canvas.getContext('2d'));
+        this.drawObjects(gameObjs, this.map_canvas.getContext('2d'));
     }
 
     parseGameObjects(tilesParsedJSON = null)
     {
-        if(!this.jsonLoaded)
-        {
-            setTimeout(function() {this.parseEntities()}, 100);
-        }
-        else
-        {
-            let gameObjects = [];
+        let gameObjects = [];
 
-            for(let idx = 0; idx < this.tileLayers.length; idx++)
+        for(let idx = 0; idx < this.tileLayers.length; idx++)
+        {
+            if(this.tileLayers[idx].name === 'objects')
             {
-                if(this.tileLayers[idx].name === 'objects')
+                for(let subLayerIdx = 0; subLayerIdx < this.tileLayers[idx].layers.length; subLayerIdx++)
                 {
-                    for(let subLayerIdx = 0; subLayerIdx < this.tileLayers[idx].layers.length; subLayerIdx++)
+                    for(let pixel_number = 0; pixel_number < this.tileLayers[idx].layers[subLayerIdx].data.length; pixel_number++)
                     {
-                        for(let pixel_number = 0; pixel_number < this.tileLayers[idx].layers[subLayerIdx].data.length; pixel_number++)
+                        let tileIdx = this.tileLayers[idx].layers[subLayerIdx].data[pixel_number];
+                        if(tileIdx !== 0)
                         {
-                            let tileIdx = this.tileLayers[idx].layers[subLayerIdx].data[pixel_number];
-                            if(tileIdx !== 0)
-                            {
-                                let objX = (pixel_number % this.xCount) * this.tileSize.x;
-                                let objY = Math.floor(pixel_number / this.xCount) * this.tileSize.y;
+                            let objX = (pixel_number % this.xCount) * this.tileSize.x;
+                            let objY = Math.floor(pixel_number / this.xCount) * this.tileSize.y;
 
-                                let gameObj = {
-                                    name: this.tileLayers[idx].layers[subLayerIdx].name,
-                                    x: objX,
-                                    y: objY
-                                }
-
-                                gameObjects.push(gameObj);
+                            let gameObj = {
+                                name: this.tileLayers[idx].layers[subLayerIdx].name,
+                                x: objX,
+                                y: objY
                             }
+
+                            gameObjects.push(gameObj);
                         }
                     }
                 }
             }
-
-            return gameObjects;
         }
-    }
 
-    getPosition()
-    {
-
+        return gameObjects;
     }
 
     parseMap(tilesParsedJSON)
@@ -100,8 +92,8 @@ export class MapManager
         for (let i = 0; i < this.mapData.tilesets.length; i++) 
         {
             let img = new Image();
-
             img.src = IMG_PATH + this.mapData.tilesets[i].image; // задание пути к изображению
+            
             let t = this.mapData.tilesets[i]; //забираем tileset из карты
 
             let ts = { // создаем свой объект tileset
@@ -118,20 +110,21 @@ export class MapManager
         this.jsonLoaded = true; // когда разобран весь json
     }
 
-    draw(canvas, context)
+    drawFloor(canvas, context)
     {
         if(!this.jsonLoaded)
         {
-            setTimeout(function() {this.draw(ctx);}, 100);
+            setTimeout(function() {this.drawFloor(canvas, context);}, 100);
         }
         else 
         {
             context.clearRect(0, 0, canvas.width, canvas.height);
 
+            //context.beginPath();
             // проходимся по всем слоям
             for(let idx = 0; idx < this.tileLayers.length; idx++)
             {
-                if(this.tileLayers[idx].name === 'floor') // отрисуем только первый слой floor
+                if(this.tileLayers[idx].name === 'floor') // отрисуем первый слой floor, а также слой interior
                 {
                     for(let pixel_number = 0; pixel_number < this.tileLayers[idx].data.length; pixel_number++)
                     {
@@ -152,8 +145,78 @@ export class MapManager
                     }
                 }
             }
-        }
+            //context.closePath();
 
+        }
+    }
+
+    drawInterior(context)
+    {
+        if(!this.jsonLoaded)
+        {
+            setTimeout(function() {this.drawInterior(context);}, 100);
+        }
+        else
+        {
+            //context.beginPath();
+            for(let idx = 0; idx < this.tileLayers.length; idx++)
+            {
+                if(this.tileLayers[idx].name === 'objects')
+                {
+                    for(let subLayerIdx = 0; subLayerIdx < this.tileLayers[idx].layers.length; subLayerIdx++)
+                    {
+                        if(this.tileLayers[idx].layers[subLayerIdx].name === 'interior')
+                        {
+                            for(let pixel_number = 0; pixel_number < this.tileLayers[idx].layers[subLayerIdx].data.length; pixel_number++)
+                            {
+                                let tileIdx = this.tileLayers[idx].layers[subLayerIdx].data[pixel_number];
+                                if(tileIdx !== 0)
+                                {
+                                    let tile = this.getTile(tileIdx);
+
+                                    let currentX = (pixel_number % this.xCount) * this.tileSize.x;
+                                    let currentY = Math.floor(pixel_number / this.xCount) * this.tileSize.y;
+                                    
+                                    let tsx = this.tileSize.x;
+                                    let tsy = this.tileSize.y;
+                                    tile.img.addEventListener("load", function() {
+                                        context.drawImage(tile.img, tile.x, tile.y, tsx, tsy,
+                                            currentX, currentY, tsx, tsy);
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            //context.closePath();
+        }
+    }
+
+    drawObjects(gameObjects, context)
+    {
+        if(!this.jsonLoaded)
+        {
+            setTimeout(function() {this.drawObjects(context);}, 100);
+        }
+        else 
+        {
+            if(gameObjects.heal)
+            {
+                gameObjects.heal.forEach((healObj) => {
+                    let sprite = this.SpriteManager.getSprite('heal');
+                    let tsx = this.tileSize.x;
+                    let tsy = this.tileSize.y;
+                    sprite.src = './src/tilesets/img/heal.png';
+
+                    sprite.addEventListener("load", function() {
+                        context.drawImage(sprite, healObj.x, healObj.y, tsx, tsy);
+                    });
+                })
+            }
+
+            //TODO: в будущем нужно учесть положение игрока
+        }
     }
 
     getTile(tileIdx)
