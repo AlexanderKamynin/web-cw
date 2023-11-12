@@ -1,4 +1,4 @@
-import { POSITIONS } from "./const";
+import { DIRECTIONS } from "./const";
 
 export class IGameObject
 {
@@ -20,7 +20,7 @@ export class IGameObject
 
 export class Player extends IGameObject 
 {
-    constructor(x, y, health, damage, direction=POSITIONS.DOWN, speed=1)
+    constructor(x, y, health, damage, direction=DIRECTIONS.DOWN_TWO, speed=1)
     {
         super(x,y);
         this.health = health;
@@ -38,7 +38,7 @@ export class Player extends IGameObject
 
 export class Enemy extends IGameObject
 {
-    constructor(x, y, health, damage, direction=POSITIONS.DOWN, speed=1)
+    constructor(x, y, health, damage, direction=DIRECTIONS.DOWN_TWO, speed=1)
     {
         super(x,y);
         this.health = health;

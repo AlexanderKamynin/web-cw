@@ -120,7 +120,6 @@ export class MapManager
         {
             context.clearRect(0, 0, canvas.width, canvas.height);
 
-            //context.beginPath();
             // проходимся по всем слоям
             for(let idx = 0; idx < this.tileLayers.length; idx++)
             {
@@ -145,7 +144,6 @@ export class MapManager
                     }
                 }
             }
-            //context.closePath();
 
         }
     }
@@ -158,7 +156,6 @@ export class MapManager
         }
         else
         {
-            //context.beginPath();
             for(let idx = 0; idx < this.tileLayers.length; idx++)
             {
                 if(this.tileLayers[idx].name === 'objects')
@@ -189,7 +186,6 @@ export class MapManager
                     }
                 }
             }
-            //context.closePath();
         }
     }
 
@@ -207,7 +203,7 @@ export class MapManager
                     let spriteSrc = this.spriteManager.getSprite('heal');
                     let tsx = this.tileSize.x;
                     let tsy = this.tileSize.y;
-                    
+
                     let image = new Image();
                     image.src = spriteSrc;
                     image.addEventListener("load", function() {
@@ -216,7 +212,22 @@ export class MapManager
                 })
             }
 
-            //TODO: в будущем нужно учесть положение игрока
+            if(gameObjects.player)
+            {
+                let spriteSrc = this.spriteManager.getSprite('player');
+                let tsx = this.tileSize.x;
+                let tsy = this.tileSize.y;
+
+                let spritePos = this.spriteManager.defineDirectionInSprite(gameObjects.player.direction);
+                let playerPos = gameObjects.player.getPosition();
+                let image = new Image();
+                image.src = spriteSrc;
+                console.log(spritePos);
+                image.addEventListener("load", function() {
+                    context.drawImage(image, spritePos.column * tsx, spritePos.row * tsx, tsx, tsy,
+                        playerPos.x, playerPos.y, tsx, tsy);
+                })
+            }
         }
     }
 

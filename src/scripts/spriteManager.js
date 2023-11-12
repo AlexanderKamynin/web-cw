@@ -1,5 +1,5 @@
 import smartcrop from "smartcrop";
-import { IMG_PATH } from "./const";
+import { IMG_PATH, DIRECTIONS } from "./const";
 
 
 export class SpriteManager
@@ -21,32 +21,37 @@ export class SpriteManager
         this.sprites['heal'].onload = function() {
             console.log('Heal sprite загружен');
         }
-        // this.sprites['playerDownOne'] = 
-        // this.sprites['playerDownTwo']
-        // this.sprites['playerDownThree']
 
-        // this.sprites['playerLeftOne']
-        // this.sprites['playerLeftTwo']
-        // this.sprites['playerLeftThree']
-
-        // this.sprites['playerRightOne']
-        // this.sprites['playerRightTwo']
-        // this.sprites['playerRightThree']
-
-        // this.sprites['playerUpOne']
-        // this.sprites['playerUpTwo']
-        // this.sprites['playerUpThree']
+        this.sprites['player'] = new Image();
+        this.sprites['player'].onload = function() {
+            console.log('Player sprite загружен');
+        }
     }
 
     getSprite(spriteName)
     {
         if(spriteName in this.sprites)
         {
-            this.sprites['heal'].src = this.spritesSrc.heal;
-            return this.sprites['heal'].src;
+            this.sprites[spriteName].src = this.spritesSrc[spriteName];
+            return this.sprites[spriteName].src;
         }
         else {
             throw `Cannot find sprite with name ${spriteName}`;
         }
     }
+
+    defineDirectionInSprite(direction)
+    {
+        for(let idx = 0; idx < Object.values(DIRECTIONS).length; idx++)
+        {
+            if(Object.values(DIRECTIONS)[idx] === String(direction))
+            {
+                return {
+                    row: Math.floor(idx / 3), 
+                    column: idx % 3
+                }
+            }
+        }
+        
+    };
 }
