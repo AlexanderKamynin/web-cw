@@ -18,8 +18,9 @@ export class SpriteManager
     loadAllSprites()
     {
         this.sprites['heal'] = new Image();
-        this.sprites['heal'].src = this.spritesSrc.heal;
-        
+        this.sprites['heal'].onload = function() {
+            console.log('Heal sprite загружен');
+        }
         // this.sprites['playerDownOne'] = 
         // this.sprites['playerDownTwo']
         // this.sprites['playerDownThree']
@@ -41,7 +42,8 @@ export class SpriteManager
     {
         if(spriteName in this.sprites)
         {
-            return this.sprites[spriteName];
+            this.sprites['heal'].src = this.spritesSrc.heal;
+            return this.sprites['heal'].src;
         }
         else {
             throw `Cannot find sprite with name ${spriteName}`;

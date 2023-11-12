@@ -25,11 +25,11 @@
             "expandedGroupLayers": [
                 4
             ],
-            "scale": 1.5,
+            "scale": 0.5,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 277.6666666666667,
-                "y": 215.33333333333331
+                "x": 520,
+                "y": 400
             }
         },
         "level1.json#floor": {

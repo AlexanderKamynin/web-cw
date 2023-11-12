@@ -25,7 +25,6 @@ class Engine
 
         this.gameManager.initGameObjects(this.mapManager.parseGameObjects());
         console.log(this.gameManager);
-
         this.mapManager.render(this.gameManager.gameObjects);
     }
 

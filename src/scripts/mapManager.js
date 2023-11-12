@@ -6,7 +6,7 @@ export class MapManager
 {
     constructor(spriteManager) 
     {
-        this.SpriteManager = spriteManager;
+        this.spriteManager = spriteManager;
         this.mapData = null;
         this.tileLayers = null;
         this.xCount = 0;
@@ -193,24 +193,25 @@ export class MapManager
         }
     }
 
-    drawObjects(gameObjects, context)
+    drawObjects(gameObjects, context=this.map_canvas.getContext('2d'))
     {
         if(!this.jsonLoaded)
         {
-            setTimeout(function() {this.drawObjects(context);}, 100);
+            setTimeout(this.drawObjects(context), 100);
         }
         else 
         {
             if(gameObjects.heal)
             {
                 gameObjects.heal.forEach((healObj) => {
-                    let sprite = this.SpriteManager.getSprite('heal');
+                    let spriteSrc = this.spriteManager.getSprite('heal');
                     let tsx = this.tileSize.x;
                     let tsy = this.tileSize.y;
-                    sprite.src = './src/tilesets/img/heal.png';
-
-                    sprite.addEventListener("load", function() {
-                        context.drawImage(sprite, healObj.x, healObj.y, tsx, tsy);
+                    
+                    let image = new Image();
+                    image.src = spriteSrc;
+                    image.addEventListener("load", function() {
+                        context.drawImage(image, healObj.x, healObj.y, tsx, tsy);
                     });
                 })
             }
