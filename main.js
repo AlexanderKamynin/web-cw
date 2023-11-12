@@ -1,4 +1,5 @@
 import { MapManager } from "./src/scripts/mapManager";
+import { GameManager } from "./src/scripts/gameManager";
 import { MAP_PATH } from "./src/scripts/const";
 
 class Engine
@@ -6,6 +7,7 @@ class Engine
     constructor()
     {
         this.mapManager = new MapManager();
+        this.gameManager = new GameManager();
     }
 
     start()
@@ -17,6 +19,9 @@ class Engine
     {
         await this.loadMap(MAP_PATH).then((json) => this.mapManager.parseMap(json));
         console.log(this.mapManager);
+
+        this.gameManager.setGameObjects(this.mapManager.parseGameObjects());
+        console.log(this.gameManager);
         this.mapManager.render();
     }
 

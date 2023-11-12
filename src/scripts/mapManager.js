@@ -1,5 +1,6 @@
 import { IMG_PATH } from "./const";
 
+//
 export class MapManager 
 {
     constructor(playgroundMapSelector) 
@@ -33,6 +34,52 @@ export class MapManager
         this.map_canvas.style.height = `${this.mapSize.y}px`;
 
         this.draw(this.map_canvas, this.map_canvas.getContext('2d'));
+    }
+
+    parseGameObjects(tilesParsedJSON = null)
+    {
+        if(!this.jsonLoaded)
+        {
+            setTimeout(function() {this.parseEntities()}, 100);
+        }
+        else
+        {
+            let gameObjects = [];
+
+            for(let idx = 0; idx < this.tileLayers.length; idx++)
+            {
+                if(this.tileLayers[idx].name === 'objects')
+                {
+                    for(let subLayerIdx = 0; subLayerIdx < this.tileLayers[idx].layers.length; subLayerIdx++)
+                    {
+                        for(let pixel_number = 0; pixel_number < this.tileLayers[idx].layers[subLayerIdx].data.length; pixel_number++)
+                        {
+                            let tileIdx = this.tileLayers[idx].layers[subLayerIdx].data[pixel_number];
+                            if(tileIdx !== 0)
+                            {
+                                let objX = (pixel_number % this.xCount) * this.tileSize.x;
+                                let objY = Math.floor(pixel_number / this.xCount) * this.tileSize.y;
+
+                                let gameObj = {
+                                    name: this.tileLayers[idx].layers[subLayerIdx].name,
+                                    x: objX,
+                                    y: objY
+                                }
+
+                                gameObjects.push(gameObj);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return gameObjects;
+        }
+    }
+
+    getPosition()
+    {
+
     }
 
     parseMap(tilesParsedJSON)
@@ -84,7 +131,7 @@ export class MapManager
             // проходимся по всем слоям
             for(let idx = 0; idx < this.tileLayers.length; idx++)
             {
-                if(idx === 0) // отрисуем пока что только первый слой floor
+                if(this.tileLayers[idx].name === 'floor') // отрисуем только первый слой floor
                 {
                     for(let pixel_number = 0; pixel_number < this.tileLayers[idx].data.length; pixel_number++)
                     {
