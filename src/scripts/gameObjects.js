@@ -15,6 +15,12 @@ export class IGameObject
             y: this.y
         };
     }
+
+    setPosition(x, y)
+    {
+        this.x = x;
+        this.y = y;
+    }
 }
 
 
@@ -27,6 +33,11 @@ export class Player extends IGameObject
         this.damage = damage;
         this.direction = direction;
         this.speed = speed;
+    }
+
+    getSpeed()
+    {
+        return this.speed;
     }
 
     makeHeal(healEffect)

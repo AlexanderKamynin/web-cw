@@ -1,0 +1,12 @@
+
+
+canvas {
+    margin: auto;
+    height: calc(100dvh - 25px);
+    /* width: 100vh; */
+    aspect-ratio: 1/1;
+}
+
+.playground_box {
+    display: flex;
+}

@@ -17,14 +17,11 @@ export class MapManager
 
         this.jsonLoaded = false;
 
-        this.view = {
-            x: 0,
-            y: 0,
-            w: 800,
-            h: 600
-        };
-
         this.map_canvas = document.querySelector('.playground_map');
+    }
+
+    getTileSize(){
+        return this.tileSize;
     }
 
     render(gameObjs=null)
@@ -32,8 +29,8 @@ export class MapManager
         this.map_canvas.width = this.mapSize.x;
         this.map_canvas.height = this.mapSize.y;
 
-        this.map_canvas.style.width = `${this.mapSize.x}px`;
-        this.map_canvas.style.height = `${this.mapSize.y}px`;
+        // this.map_canvas.style.width = `${this.mapSize.x}px`;
+        // this.map_canvas.style.height = `${this.mapSize.y}px`;
         
         this.drawFloor(this.map_canvas, this.map_canvas.getContext('2d'));
         this.drawInterior(this.map_canvas.getContext('2d'));
