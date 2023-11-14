@@ -8,46 +8,18 @@ class Engine
 {
     constructor()
     {
-        this.spriteManager = new SpriteManager();
-        this.mapManager = new MapManager(this.spriteManager);
         this.gameManager = new GameManager();
+
+        this.startGameButton = document.querySelector(".start_game");
     }
 
-    start()
+    async start()
     {
-        this.init();
-    }
+        await this.gameManager.init();
 
-    async init()
-    {
-        await this.loadMap(MAP_PATH).then((json) => this.mapManager.parseMap(json));
-        console.log(this.mapManager);
-
-        this.gameManager.initGameObjects(this.mapManager.parseGameObjects());
-        console.log(this.gameManager);
-        this.mapManager.render(this.gameManager.gameObjects);
-    }
-
-    async loadMap(path) 
-    {
-        let tilesParsedJSON = null;
-
-        await fetch(
-            path,
-            {
-                headers:
-                {
-                    'Content-Type': 'application/json',
-                },
-                method: "GET"
-            }
-        )
-        .then(response => response.json())
-        .then(response => {
-            tilesParsedJSON = response;
+        this.startGameButton.addEventListener("click", async() => {
+            await this.gameManager.startGame();
         });
-
-        return tilesParsedJSON;
     }
 }
 

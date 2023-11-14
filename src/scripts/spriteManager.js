@@ -33,7 +33,7 @@ export class SpriteManager
         if(spriteName in this.sprites)
         {
             this.sprites[spriteName].src = this.spritesSrc[spriteName];
-            return this.sprites[spriteName].src;
+            return this.sprites[spriteName];
         }
         else {
             throw `Cannot find sprite with name ${spriteName}`;

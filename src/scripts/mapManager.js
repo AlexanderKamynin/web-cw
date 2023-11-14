@@ -1,4 +1,4 @@
-import { IMG_PATH } from "./const";
+import { IMG_PATH, MAP_PATH } from "./const";
 import { SpriteManager } from "./spriteManager";
 
 //
@@ -6,6 +6,7 @@ export class MapManager
 {
     constructor(spriteManager) 
     {
+        this.mapJsonData = null;
         this.spriteManager = spriteManager;
         this.mapData = null;
         this.tileLayers = null;
@@ -16,25 +17,26 @@ export class MapManager
         this.tilesets = new Array();
 
         this.jsonLoaded = false;
-
-        this.map_canvas = document.querySelector('.playground_map');
     }
+
+    async init()
+    {
+        let response = await fetch(MAP_PATH);
+        this.mapJsonData = await response.json();
+        this.parseMap(this.mapJsonData);
+
+        //checks that all ok
+        //console.log(this.mapJsonData);
+        //console.log(this.mapData, this.jsonLoaded);
+    }
+
 
     getTileSize(){
         return this.tileSize;
     }
 
-    render(gameObjs=null)
-    {
-        this.map_canvas.width = this.mapSize.x;
-        this.map_canvas.height = this.mapSize.y;
-
-        // this.map_canvas.style.width = `${this.mapSize.x}px`;
-        // this.map_canvas.style.height = `${this.mapSize.y}px`;
-        
-        this.drawFloor(this.map_canvas, this.map_canvas.getContext('2d'));
-        this.drawInterior(this.map_canvas.getContext('2d'));
-        this.drawObjects(gameObjs, this.map_canvas.getContext('2d'));
+    getMapSize(){
+        return this.mapSize;
     }
 
     parseGameObjects(tilesParsedJSON = null)
@@ -107,16 +109,14 @@ export class MapManager
         this.jsonLoaded = true; // когда разобран весь json
     }
 
-    drawFloor(canvas, context)
+    drawFloor(context)
     {
         if(!this.jsonLoaded)
         {
-            setTimeout(function() {this.drawFloor(canvas, context);}, 100);
+            setTimeout(function() {this.drawFloor(context);}, 100);
         }
         else 
         {
-            context.clearRect(0, 0, canvas.width, canvas.height);
-
             // проходимся по всем слоям
             for(let idx = 0; idx < this.tileLayers.length; idx++)
             {
@@ -186,7 +186,7 @@ export class MapManager
         }
     }
 
-    drawObjects(gameObjects, context=this.map_canvas.getContext('2d'))
+    drawObjects(gameObjects, context)
     {
         if(!this.jsonLoaded)
         {
@@ -197,31 +197,27 @@ export class MapManager
             if(gameObjects.heal)
             {
                 gameObjects.heal.forEach((healObj) => {
-                    let spriteSrc = this.spriteManager.getSprite('heal');
+                    let sprite = this.spriteManager.getSprite('heal');
                     let tsx = this.tileSize.x;
                     let tsy = this.tileSize.y;
 
-                    let image = new Image();
-                    image.src = spriteSrc;
-                    image.addEventListener("load", function() {
-                        context.drawImage(image, healObj.x, healObj.y, tsx, tsy);
+                    sprite.addEventListener("load", function() {
+                        context.drawImage(sprite, healObj.x, healObj.y, tsx, tsy);
                     });
                 })
             }
 
             if(gameObjects.player)
             {
-                let spriteSrc = this.spriteManager.getSprite('player');
+                let sprite = this.spriteManager.getSprite('player');
                 let tsx = this.tileSize.x;
                 let tsy = this.tileSize.y;
 
                 let spritePos = this.spriteManager.defineDirectionInSprite(gameObjects.player.direction);
                 let playerPos = gameObjects.player.getPosition();
-                let image = new Image();
-                image.src = spriteSrc;
-                console.log(spritePos);
-                image.addEventListener("load", function() {
-                    context.drawImage(image, spritePos.column * tsx, spritePos.row * tsx, tsx, tsy,
+
+                sprite.addEventListener("load", function() {
+                    context.drawImage(sprite, spritePos.column * tsx, spritePos.row * tsx, tsx, tsy,
                         playerPos.x, playerPos.y, tsx, tsy);
                 })
             }
