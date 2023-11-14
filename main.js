@@ -20,6 +20,13 @@ class Engine
         this.startGameButton.addEventListener("click", async() => {
             await this.gameManager.startGame();
         });
+
+        document.addEventListener("finish", () => {
+            //checks when game finished
+            // 1. hero health < 0
+            // 2. all levels done
+            // 3. current level done (maybe restart?)
+        });
     }
 }
 

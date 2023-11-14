@@ -40,6 +40,11 @@ export class Player extends IGameObject
         return this.speed;
     }
 
+    setDirection(direction)
+    {
+        this.direction = direction;
+    }
+
     makeHeal(healEffect)
     {
         this.health += healEffect;

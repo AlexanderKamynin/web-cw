@@ -3,6 +3,7 @@ import { EventManager } from "./eventManager";
 import { PhysicsManager } from "./physicsManager";
 import { MapManager } from "./mapManager";
 import { SpriteManager } from "./spriteManager";
+import { IMG_PATH } from "./const";
 
 
 export class GameManager
@@ -13,12 +14,16 @@ export class GameManager
         this.eventManager = new EventManager();
         this.spriteManager = new SpriteManager();
         this.mapManager = new MapManager(this.spriteManager);
+        this.background = new Image();
+        this.background.src = IMG_PATH + 'img/level1.png';
+        this.physicsManager = null;
 
         //objects
         this.gameObjects = {};
 
         this.level = 1;
         this.isGameOver = false;
+        this.isMapInit = false;
 
         //draw settings
         this.canvas = document.querySelector(".playground_map");
@@ -29,9 +34,11 @@ export class GameManager
     {
         await this.mapManager.init();
         this.initGameObjects(this.mapManager.parseGameObjects());
+        this.physicsManager = new PhysicsManager(this.mapManager.getTileSize(), this.eventManager, this.gameObjects);
 
         //check that all okey
         console.log(this.mapManager);
+        console.log(this.physicsManager);
         console.log(this.gameObjects);
 
         //manipulation with canvas
@@ -40,6 +47,7 @@ export class GameManager
 
         //первоначальная отрисовка
         this.render();
+        this.isMapInit = true;
     }
 
     async startGame()
@@ -50,8 +58,8 @@ export class GameManager
         this.isGameOver = false;
         this.gameCycle = setInterval(() => {
             //проверка, что все изображение стирается
-            //this.canvas_context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        }, 30);
+            this.render();
+        }, 1000/60);
     }
 
     render()
@@ -60,8 +68,11 @@ export class GameManager
         this.canvas_context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         //рисуем в следующей последовательности: floor -> interior -> object and entities
-        this.mapManager.drawFloor(this.canvas_context);
-        this.mapManager.drawInterior(this.canvas_context);
+        //this.mapManager.drawFloor(this.canvas_context);
+        //this.mapManager.drawInterior(this.canvas_context);
+
+        //отрисовываем background
+        this.canvas_context.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
         this.mapManager.drawObjects(this.gameObjects, this.canvas_context);
     }
 
@@ -101,30 +112,6 @@ export class GameManager
             else {
                 this.gameObjects[gameObjects[objIdx].name].push(newObject);
             }
-        }
-    }
-
-    getObjectByXY(x, y)
-    {
-        for(let objTypeIdx = 0; objTypeIdx < this.gameObjects.length; objTypeIdx++)
-        {
-            for(let idx = 0; idx < this.gameObjects[objTypeIdx].length; idx++)
-            {
-                //TODO: start, but didn't done
-                //if()
-            }
-        }
-    }
-
-    getObjectByName(objName)
-    {
-        if(this.gameObjects[objName])
-        {
-            return this.gameObjects[objName];
-        }
-        else
-        {
-            throw `No such gameObject type ${objName}`;
         }
     }
 }

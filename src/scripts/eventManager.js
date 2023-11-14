@@ -38,7 +38,7 @@ export class EventManager
 
     onKeyUp(event)
     {
-        const action = this.moveKeys[event.keyCode];
+        let action = this.moveKeys[event.keyCode];
         if(action)
         {
             this.moveKeys[event.keyCode].isPressed = false;

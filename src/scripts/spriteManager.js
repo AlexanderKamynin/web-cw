@@ -18,11 +18,13 @@ export class SpriteManager
     loadAllSprites()
     {
         this.sprites['heal'] = new Image();
+        this.sprites['heal'].src = this.spritesSrc['heal'];
         this.sprites['heal'].onload = function() {
             console.log('Heal sprite загружен');
         }
 
         this.sprites['player'] = new Image();
+        this.sprites['player'].src = this.spritesSrc['player'];
         this.sprites['player'].onload = function() {
             console.log('Player sprite загружен');
         }
@@ -32,7 +34,7 @@ export class SpriteManager
     {
         if(spriteName in this.sprites)
         {
-            this.sprites[spriteName].src = this.spritesSrc[spriteName];
+            //this.sprites[spriteName].src = this.spritesSrc[spriteName];
             return this.sprites[spriteName];
         }
         else {

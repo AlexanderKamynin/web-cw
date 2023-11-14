@@ -201,9 +201,10 @@ export class MapManager
                     let tsx = this.tileSize.x;
                     let tsy = this.tileSize.y;
 
-                    sprite.addEventListener("load", function() {
-                        context.drawImage(sprite, healObj.x, healObj.y, tsx, tsy);
-                    });
+                    // sprite.addEventListener("load", function() {
+                    //     context.drawImage(sprite, healObj.x, healObj.y, tsx, tsy);
+                    // });
+                    context.drawImage(sprite, healObj.x, healObj.y, tsx, tsy);
                 })
             }
 
@@ -216,10 +217,12 @@ export class MapManager
                 let spritePos = this.spriteManager.defineDirectionInSprite(gameObjects.player.direction);
                 let playerPos = gameObjects.player.getPosition();
 
-                sprite.addEventListener("load", function() {
-                    context.drawImage(sprite, spritePos.column * tsx, spritePos.row * tsx, tsx, tsy,
-                        playerPos.x, playerPos.y, tsx, tsy);
-                })
+                // sprite.addEventListener("load", function() {
+                //     context.drawImage(sprite, spritePos.column * tsx, spritePos.row * tsx, tsx, tsy,
+                //         playerPos.x, playerPos.y, tsx, tsy);
+                // })
+                context.drawImage(sprite, spritePos.column * tsx, spritePos.row * tsx, tsx, tsy,
+                    playerPos.x, playerPos.y, tsx, tsy);;
             }
         }
     }
