@@ -1,5 +1,5 @@
 import smartcrop from "smartcrop";
-import { IMG_PATH, DIRECTIONS } from "./const";
+import { IMG_PATH, SPRITE_DIRECTIONS } from "./const";
 
 
 export class SpriteManager
@@ -44,9 +44,9 @@ export class SpriteManager
 
     defineDirectionInSprite(direction)
     {
-        for(let idx = 0; idx < Object.values(DIRECTIONS).length; idx++)
+        for(let idx = 0; idx < Object.values(SPRITE_DIRECTIONS).length; idx++)
         {
-            if(Object.values(DIRECTIONS)[idx] === String(direction))
+            if(Object.values(SPRITE_DIRECTIONS)[idx] === String(direction))
             {
                 return {
                     row: Math.floor(idx / 3), 

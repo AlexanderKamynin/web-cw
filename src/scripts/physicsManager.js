@@ -48,17 +48,16 @@ export class PhysicsManager
         switch(moveKey)
         {
             case "w":
-                //TODO: менять номер колонки в направлении
-                player.setDirection(DIRECTIONS.UP_ONE);
+                player.setDirection(DIRECTIONS.UP);
                 break;
             case "a":
-                player.setDirection(DIRECTIONS.LEFT_ONE);
+                player.setDirection(DIRECTIONS.LEFT);
                 break;
             case "s":
-                player.setDirection(DIRECTIONS.DOWN_ONE);
+                player.setDirection(DIRECTIONS.DOWN);
                 break;
             case "d":
-                player.setDirection(DIRECTIONS.RIGHT_ONE);
+                player.setDirection(DIRECTIONS.RIGHT);
                 break;
             default:
                 break;

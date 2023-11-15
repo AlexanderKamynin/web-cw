@@ -1,4 +1,4 @@
-import { DIRECTIONS } from "./const";
+import { SPRITE_DIRECTIONS, DIRECTIONS } from "./const";
 
 export class IGameObject
 {
@@ -26,7 +26,7 @@ export class IGameObject
 
 export class Player extends IGameObject 
 {
-    constructor(x, y, health, damage, direction=DIRECTIONS.DOWN_TWO, speed=1)
+    constructor(x, y, health, damage, direction=SPRITE_DIRECTIONS.DOWN_TWO, speed=2)
     {
         super(x,y);
         this.health = health;
@@ -42,7 +42,20 @@ export class Player extends IGameObject
 
     setDirection(direction)
     {
-        this.direction = direction;
+        let allDirections = Object.values(SPRITE_DIRECTIONS);
+
+        //определяем, меняем ли мы направление
+        if(direction.sprite_directions.includes(this.direction))
+        {
+            const row = Math.floor(allDirections.indexOf(this.direction) / 3);
+            const column = allDirections.indexOf(this.direction) % 3;
+
+            const newDirectionIdx = Math.floor((allDirections.indexOf(this.direction) + 1) / 3) === row ? 3 * row + (column + 1) : row * 3;
+            this.direction = allDirections[newDirectionIdx];
+        }
+        else {
+            this.direction = direction.sprite_directions[Math.floor(direction.sprite_directions.length / 2)]; // получаем центральный спрайт в данном направлении как начальный
+        }
     }
 
     makeHeal(healEffect)
@@ -54,7 +67,7 @@ export class Player extends IGameObject
 
 export class Enemy extends IGameObject
 {
-    constructor(x, y, health, damage, direction=DIRECTIONS.DOWN_TWO, speed=1)
+    constructor(x, y, health, damage, direction=SPRITE_DIRECTIONS.DOWN_TWO, speed=1)
     {
         super(x,y);
         this.health = health;
