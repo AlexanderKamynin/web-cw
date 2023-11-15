@@ -40,6 +40,11 @@ export class Player extends IGameObject
         return this.speed;
     }
 
+    getDirection()
+    {
+        return this.direction;
+    }
+
     setDirection(direction)
     {
         let allDirections = Object.values(SPRITE_DIRECTIONS);

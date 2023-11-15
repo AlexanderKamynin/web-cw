@@ -20,6 +20,7 @@ export class GameManager
 
         //objects
         this.gameObjects = {};
+        this.player = null;
 
         this.level = 1;
         this.isGameOver = false;
@@ -34,12 +35,11 @@ export class GameManager
     {
         await this.mapManager.init();
         this.initGameObjects(this.mapManager.parseGameObjects());
-        this.physicsManager = new PhysicsManager(this.mapManager.getTileSize(), this.eventManager, this.gameObjects);
 
         //check that all okey
         console.log(this.mapManager);
-        console.log(this.physicsManager);
         console.log(this.gameObjects);
+        console.log(this.player);
 
         //manipulation with canvas
         this.canvas.width = this.mapManager.getMapSize().x;
@@ -54,6 +54,9 @@ export class GameManager
     {
         //for logs
         console.log('start game');
+
+        this.physicsManager = new PhysicsManager(this.mapManager.getTileSize(), this.eventManager, this.gameObjects, this.player);
+        console.log(this.physicsManager);
 
         this.isGameOver = false;
         this.gameCycle = setInterval(() => {
@@ -74,6 +77,7 @@ export class GameManager
         //отрисовываем background
         this.canvas_context.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
         this.mapManager.drawObjects(this.gameObjects, this.canvas_context);
+        this.mapManager.drawPlayer(this.player, this.canvas_context);
     }
 
     initGameObjects(gameObjects)
@@ -101,7 +105,7 @@ export class GameManager
 
             if(gameObjects[objIdx].name === 'player')
             {
-                this.gameObjects[gameObjects[objIdx].name] = newObject;
+                this.player = newObject;
                 continue;
             }
 

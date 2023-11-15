@@ -207,23 +207,26 @@ export class MapManager
                     context.drawImage(sprite, healObj.x, healObj.y, tsx, tsy);
                 })
             }
+        }
+    }
 
-            if(gameObjects.player)
-            {
-                let sprite = this.spriteManager.getSprite('player');
-                let tsx = this.tileSize.x;
-                let tsy = this.tileSize.y;
+    drawPlayer(player, context)
+    {
+        if(player)
+        {
+            let sprite = this.spriteManager.getSprite('player');
+            let tsx = this.tileSize.x;
+            let tsy = this.tileSize.y;
 
-                let spritePos = this.spriteManager.defineDirectionInSprite(gameObjects.player.direction);
-                let playerPos = gameObjects.player.getPosition();
+            let spritePos = this.spriteManager.defineDirectionInSprite(player.getDirection());
+            let playerPos = player.getPosition();
 
-                // sprite.addEventListener("load", function() {
-                //     context.drawImage(sprite, spritePos.column * tsx, spritePos.row * tsx, tsx, tsy,
-                //         playerPos.x, playerPos.y, tsx, tsy);
-                // })
-                context.drawImage(sprite, spritePos.column * tsx, spritePos.row * tsx, tsx, tsy,
-                    playerPos.x, playerPos.y, tsx, tsy);;
-            }
+            // sprite.addEventListener("load", function() {
+            //     context.drawImage(sprite, spritePos.column * tsx, spritePos.row * tsx, tsx, tsy,
+            //         playerPos.x, playerPos.y, tsx, tsy);
+            // })
+            context.drawImage(sprite, spritePos.column * tsx, spritePos.row * tsx, tsx, tsy,
+                playerPos.x, playerPos.y, tsx, tsy);
         }
     }
 

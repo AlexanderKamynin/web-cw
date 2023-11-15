@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "level1.json",
+    "activeFile": "level1.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -25,11 +25,11 @@
             "expandedGroupLayers": [
                 4
             ],
-            "scale": 0.75,
-            "selectedLayer": 1,
+            "scale": 4,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 379.99999999999994,
-                "y": 284
+                "x": 223.25,
+                "y": 120.25
             }
         },
         "level1.json#floor": {
@@ -51,10 +51,10 @@
                 4
             ],
             "scale": 0.75,
-            "selectedLayer": 1,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 488.6666666666666,
-                "y": 14.666666666666629
+                "x": 483.99999999999994,
+                "y": 9.333333333333371
             }
         },
         "level1.tmx#bonus": {
@@ -84,12 +84,12 @@
     "map.tileWidth": 48,
     "map.width": 20,
     "openFiles": [
-        "level1.json"
+        "level1.tmx"
     ],
     "project": "cw.tiled-project",
     "recentFiles": [
-        "level1.json",
         "level1.tmx",
+        "level1.json",
         "interior1.tsx"
     ],
     "tileset.embedInMap": true,

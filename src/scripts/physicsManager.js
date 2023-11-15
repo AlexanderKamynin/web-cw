@@ -5,30 +5,33 @@ import { DIRECTIONS } from "./const";
 
 export class PhysicsManager 
 {
-    constructor(tileSize, eventManager, gameObjects)
+    constructor(tileSize, eventManager, gameObjects, player)
     {
         this.tileSize = tileSize;
+
         this.gameObjects = gameObjects;
+        this.player = player;
+
         this.eventManager = eventManager;
         this.movementChecker = setInterval(
             () => {
                 if(this.eventManager.moveKeys[EventManager.keyToNumber("w")].isPressed)
                 {
-                    this.movePlayer(this.getObjectByName("player"), "w");
+                    this.movePlayer("w");
                 }
                 if(this.eventManager.moveKeys[EventManager.keyToNumber("a")].isPressed)
                 {
-                    this.movePlayer(this.getObjectByName("player"), "a");
+                    this.movePlayer("a");
                 }
                 if(this.eventManager.moveKeys[EventManager.keyToNumber("s")].isPressed)
                 {
-                    this.movePlayer(this.getObjectByName("player"), "s");
+                    this.movePlayer("s");
                 }
                 if (this.eventManager.moveKeys[EventManager.keyToNumber("d")].isPressed)
                 {
-                    this.movePlayer(this.getObjectByName("player"), "d");
+                    this.movePlayer("d");
                 }
-            }, 30
+            }, 1000/60
         );
     }
 
@@ -42,85 +45,97 @@ export class PhysicsManager
 
     }
 
-    movePlayer(player, moveKey)
+    movePlayer(moveKey)
     {
         //поменяли направление главного героя
         switch(moveKey)
         {
             case "w":
-                player.setDirection(DIRECTIONS.UP);
+                this.player.setDirection(DIRECTIONS.UP);
                 break;
             case "a":
-                player.setDirection(DIRECTIONS.LEFT);
+                this.player.setDirection(DIRECTIONS.LEFT);
                 break;
             case "s":
-                player.setDirection(DIRECTIONS.DOWN);
+                this.player.setDirection(DIRECTIONS.DOWN);
                 break;
             case "d":
-                player.setDirection(DIRECTIONS.RIGHT);
+                this.player.setDirection(DIRECTIONS.RIGHT);
                 break;
             default:
                 break;
         }
 
-        let newX = player.getPosition().x;
-        let newY = player.getPosition().y;
+        let newX = this.player.getPosition().x;
+        let newY = this.player.getPosition().y;
+        
         if(moveKey === "a" || moveKey === "d")
         {
-            newX = moveKey === "a" ? newX - player.getSpeed() : newX + player.getSpeed();
+            newX = moveKey === "a" ? newX - this.player.getSpeed() : newX + this.player.getSpeed();
         }
         if(moveKey === "s" || moveKey === "w")
         {
-            newY = moveKey === "w" ? newY - player.getSpeed() : newY + player.getSpeed();
+            newY = moveKey === "w" ? newY - this.player.getSpeed() : newY + this.player.getSpeed();
         }
 
         if(this.checkMove(newX, newY))
         {
-            player.setPosition(newX, newY);
+            this.player.setPosition(newX, newY);
         }
     }
 
     checkMove(newX, newY)
     {
-
-        //left up
-        if(this.isCollision(newX, newY)){
+        let newXDown = newX + this.tileSize.x;
+        let newYDown = newY + this.tileSize.y;
+        if(this.isCollision(newX, newY, newXDown, newYDown)){
             return false;
         }
-
-        //right up
-        if(this.isCollision(newX + this.tileSize.x, newY)){
-            return false;
-        }        
-        //left down
-        if(this.isCollision(newX, newY + this.tileSize.y))
-        {
-            return false;
-        }
-
-        //right down
-        if(this.isCollision(newX + this.tileSize.x, newY + this.tileSize.y))
-        {
-            return false;
-        }
-
         return true;
     }
 
-    isCollision(newX, newY)
+    isCollision(x, y, newXdown, newYdown)
     {
+        for(let objTypeIdx = 0; objTypeIdx < Object.keys(this.gameObjects).length; objTypeIdx++)
+        {
+            const objType = Object.keys(this.gameObjects)[objTypeIdx];
 
+            for(let idx = 0; idx < this.gameObjects[objType].length; idx++)
+            {
+                let epsilon = 12;
+                let objPosX = this.gameObjects[objType][idx].x;
+                let objPosY = this.gameObjects[objType][idx].y;
+
+                if(this.isSquareIntersection(x, y, newXdown, newYdown, objPosX + epsilon, objPosY + epsilon, objPosX + this.tileSize.x - epsilon, objPosY + this.tileSize.y - 2 * epsilon))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
-    getObjectByXY(x, y)
+    isSquareIntersection(leftUpX_A, leftUpY_A, rightDownX_A, rightDownY_A, leftUpX_B, leftUpY_B, rightDownX_B, rightDownY_B) 
     {
-        for(let objTypeIdx = 0; objTypeIdx < this.gameObjects.length; objTypeIdx++)
-        {
-            for(let idx = 0; idx < this.gameObjects[objTypeIdx].length; idx++)
-            {
-                //TODO: start, but didn't done
-                //if()
-            }
+        // Проверка по оси X
+        if (rightDownX_A < leftUpX_B || rightDownX_B < leftUpX_A) {
+            return false; // Проекции не пересекаются по оси X
+        }
+
+        // Проверка по оси Y
+        if (rightDownY_A < leftUpY_B || rightDownY_B < leftUpY_A) {
+            return false; // Проекции не пересекаются по оси Y
+        }
+
+        return true; // Проекции пересекаются по обеим осям
+    }
+
+    getObjectCenter(objX, objY)
+    {
+        return {
+            x: objX + Math.floor(this.tileSize.x / 2),
+            y: objY + Math.floor(this.tileSize.y / 2)
         }
     }
 
