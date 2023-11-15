@@ -1,11 +1,11 @@
 import { MapManager } from "./mapManager";
 import { EventManager } from "./eventManager";
-import { DIRECTIONS } from "./const";
+import { DIRECTIONS, SOUND_EFFECTS } from "./const";
 
 
 export class PhysicsManager 
 {
-    constructor(mapSize, tileSize, eventManager, gameObjects, player, healthPrint)
+    constructor(mapSize, tileSize, eventManager, audioManager, gameObjects, player, healthPrint)
     {
         this.tileSize = tileSize;
         this.mapSize = mapSize;
@@ -15,6 +15,7 @@ export class PhysicsManager
 
         this.healthPrint = healthPrint;
         this.eventManager = eventManager;
+        this.audioManager = audioManager;
         this.movementChecker = setInterval(
             () => {
                 if(this.eventManager.moveKeys[EventManager.keyToNumber("w")].isPressed)
@@ -104,6 +105,7 @@ export class PhysicsManager
         {
             let healEffect = obj.obj.getHealEffect();
             this.player.makeHeal(healEffect);
+            this.audioManager.playSoundEffect(SOUND_EFFECTS.HEAL);
             this.healthPrint(this.player.getHealth());
             if(obj.obj.isShouldDestroy()){
                 this.removeGameObject(obj.obj);

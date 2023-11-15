@@ -1,6 +1,7 @@
 
 export const MAP_PATH = "/src/tilesets/level1.json";
 export const IMG_PATH = "./src/tilesets/";
+export const AUDIO_PATH = "./src/audio/"
 export const SPRITE_DIRECTIONS = {
     DOWN_ONE: 'DownOne',
     DOWN_TWO: 'DownTwo',
@@ -51,4 +52,8 @@ export const DIRECTIONS = {
             SPRITE_DIRECTIONS.UP_THREE
         ]
     }
+}
+
+export const SOUND_EFFECTS = {
+    HEAL: "heal"
 }

@@ -18,7 +18,7 @@ export class GameManager
         this.mapManager = new MapManager(this.spriteManager);
         this.background = new Image();
         this.background.src = IMG_PATH + 'img/level1.png';
-        this.physicsManager = null;
+        this.physicsManager = null; //initialize with game starting
 
         //objects
         this.gameObjects = {};
@@ -63,7 +63,7 @@ export class GameManager
         //for logs
         console.log('start game');
 
-        this.physicsManager = new PhysicsManager(this.mapManager.getMapSize(), this.mapManager.getTileSize(), this.eventManager, this.gameObjects, this.player,
+        this.physicsManager = new PhysicsManager(this.mapManager.getMapSize(), this.mapManager.getTileSize(), this.eventManager, this.audioManager, this.gameObjects, this.player,
         this.healthPrint);
         console.log(this.physicsManager);
 
@@ -72,6 +72,7 @@ export class GameManager
             this.finishGameChecks();
             this.render();
         }, 1000/60);
+        this.audioManager.playBackground();
     }
 
     finishGameChecks()

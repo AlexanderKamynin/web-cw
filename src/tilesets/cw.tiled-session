@@ -50,11 +50,11 @@
             "expandedGroupLayers": [
                 4
             ],
-            "scale": 0.75,
-            "selectedLayer": 3,
+            "scale": 0.33,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 483.99999999999994,
-                "y": 9.333333333333371
+                "x": 499.9999999999999,
+                "y": 72.72727272727275
             }
         },
         "level1.tmx#bonus": {
