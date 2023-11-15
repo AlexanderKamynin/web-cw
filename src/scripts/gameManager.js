@@ -1,4 +1,4 @@
-import { Player, HealObject } from "./gameObjects";
+import { Player, HealObject, Enemy } from "./gameObjects";
 import { EventManager } from "./eventManager";
 import { PhysicsManager } from "./physicsManager";
 import { MapManager } from "./mapManager";
@@ -23,6 +23,7 @@ export class GameManager
         //objects
         this.gameObjects = {};
         this.player = null;
+        this.enemies = [];
 
         this.level = 1;
         this.isGameOver = false;
@@ -48,13 +49,14 @@ export class GameManager
         console.log(this.mapManager);
         console.log(this.gameObjects);
         console.log(this.player);
+        console.log(this.enemies);
 
         //manipulation with canvas
         this.canvas.width = this.mapManager.getMapSize().x;
         this.canvas.height = this.mapManager.getMapSize().y;
 
         //первоначальная отрисовка
-        this.render();
+        this.render(); 
         this.isMapInit = true;
     }
 
@@ -64,12 +66,14 @@ export class GameManager
         console.log('start game');
 
         this.physicsManager = new PhysicsManager(this.mapManager.getMapSize(), this.mapManager.getTileSize(), this.eventManager, this.audioManager, this.gameObjects, this.player,
-        this.healthPrint);
+        this.enemies, this.healthPrint);
+
         console.log(this.physicsManager);
 
         this.isGameOver = false;
         this.gameCycle = setInterval(() => {
             this.finishGameChecks();
+            this.physicsManager.moveEnemies();
             this.render();
         }, 1000/60);
         this.audioManager.playBackground();
@@ -104,6 +108,7 @@ export class GameManager
         this.canvas_context.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
         this.mapManager.drawObjects(this.gameObjects, this.canvas_context);
         this.mapManager.drawPlayer(this.player, this.canvas_context);
+        this.mapManager.drawEnemies(this.enemies, this.canvas_context);
     }
 
     initGameObjects(gameObjects)
@@ -123,6 +128,11 @@ export class GameManager
                         newObject = new Player(gameObjects[objIdx].x, gameObjects[objIdx].y, 100, 10);
                         break;
                     }
+                case 'enemy':
+                    {
+                        newObject = new Enemy(gameObjects[objIdx].x, gameObjects[objIdx].y, 20, 1);
+                        break;
+                    }
                 default:
                     {
                         break;
@@ -132,6 +142,12 @@ export class GameManager
             if(gameObjects[objIdx].name === 'player')
             {
                 this.player = newObject;
+                continue;
+            }
+
+            if(gameObjects[objIdx].name === 'enemy')
+            {
+                this.enemies.push(newObject);
                 continue;
             }
 

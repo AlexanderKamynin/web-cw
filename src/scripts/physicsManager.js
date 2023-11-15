@@ -1,17 +1,19 @@
 import { MapManager } from "./mapManager";
 import { EventManager } from "./eventManager";
+import { Player } from "./gameObjects";
 import { DIRECTIONS, SOUND_EFFECTS } from "./const";
 
 
 export class PhysicsManager 
 {
-    constructor(mapSize, tileSize, eventManager, audioManager, gameObjects, player, healthPrint)
+    constructor(mapSize, tileSize, eventManager, audioManager, gameObjects, player, enemies, healthPrint)
     {
         this.tileSize = tileSize;
         this.mapSize = mapSize;
 
         this.gameObjects = gameObjects;
         this.player = player;
+        this.enemies = enemies;
 
         this.healthPrint = healthPrint;
         this.eventManager = eventManager;
@@ -20,64 +22,64 @@ export class PhysicsManager
             () => {
                 if(this.eventManager.moveKeys[EventManager.keyToNumber("w")].isPressed)
                 {
-                    this.movePlayer("w");
+                    this.moveEntity(this.player, "w");
                 }
                 if(this.eventManager.moveKeys[EventManager.keyToNumber("a")].isPressed)
                 {
-                    this.movePlayer("a");
+                    this.moveEntity(this.player, "a");
                 }
                 if(this.eventManager.moveKeys[EventManager.keyToNumber("s")].isPressed)
                 {
-                    this.movePlayer("s");
+                    this.moveEntity(this.player, "s");
                 }
                 if (this.eventManager.moveKeys[EventManager.keyToNumber("d")].isPressed)
                 {
-                    this.movePlayer("d");
+                    this.moveEntity(this.player, "d");
                 }
             }, 1000/60
         );
     }
 
-    movePlayer(moveKey)
+    moveEntity(entity, moveKey)
     {
         //поменяли направление главного героя
         switch(moveKey)
         {
             case "w":
-                this.player.setDirection(DIRECTIONS.UP);
+                entity.setDirection(DIRECTIONS.UP);
                 break;
             case "a":
-                this.player.setDirection(DIRECTIONS.LEFT);
+                entity.setDirection(DIRECTIONS.LEFT);
                 break;
             case "s":
-                this.player.setDirection(DIRECTIONS.DOWN);
+                entity.setDirection(DIRECTIONS.DOWN);
                 break;
             case "d":
-                this.player.setDirection(DIRECTIONS.RIGHT);
+                entity.setDirection(DIRECTIONS.RIGHT);
                 break;
             default:
                 break;
         }
 
-        let newX = this.player.getPosition().x;
-        let newY = this.player.getPosition().y;
+        let newX = entity.getPosition().x;
+        let newY = entity.getPosition().y;
         
         if(moveKey === "a" || moveKey === "d")
         {
-            newX = moveKey === "a" ? newX - this.player.getSpeed() : newX + this.player.getSpeed();
+            newX = moveKey === "a" ? newX - entity.getSpeed() : newX + entity.getSpeed();
         }
         if(moveKey === "s" || moveKey === "w")
         {
-            newY = moveKey === "w" ? newY - this.player.getSpeed() : newY + this.player.getSpeed();
+            newY = moveKey === "w" ? newY - entity.getSpeed() : newY + entity.getSpeed();
         }
 
-        if(this.checkMove(newX, newY))
+        if(this.checkMove(entity, newX, newY))
         {
-            this.player.setPosition(newX, newY);
+            entity.setPosition(newX, newY);
         }
     }
 
-    checkMove(newX, newY)
+    checkMove(entity, newX, newY)
     {
         let newXDown = newX + this.tileSize.x;
         let newYDown = newY + this.tileSize.y;
@@ -87,11 +89,47 @@ export class PhysicsManager
 
         let objCollision = this.isCollision(newX, newY, newXDown, newYDown);
         if(objCollision){
-            this.reactObjectOnPlayer(objCollision);
+            if(entity instanceof Player)
+            {
+                this.reactObjectOnPlayer(objCollision);
+            }
+
             return false;
         }
 
         return true;
+    }
+
+    moveEnemies()
+    {
+        for(let idx = 0; idx < this.enemies.length; idx++)
+        {
+            let enemyX = this.enemies[idx].getPosition().x;
+            let enemyY = this.enemies[idx].getPosition().y;
+            //как-то нужно вычислять target position
+            let targetX = this.player.getPosition().x;
+            let targetY = this.player.getPosition().y;
+
+            if(enemyX !== targetX || enemyY !== targetY)
+            {
+                if(enemyX < targetX) // двигаемся вправо
+                {
+                    this.moveEntity(this.enemies[idx], "d");
+                }
+                else if(enemyY > targetY) // движемся наверх
+                {
+                    this.moveEntity(this.enemies[idx], "w");
+                }
+                else if(enemyX > targetX) // двигаемся влево
+                {
+                    this.moveEntity(this.enemies[idx], "a");
+                }
+                else if(enemyY < targetY) // двигаемся вниз
+                {
+                    this.moveEntity(this.enemies[idx], "s");
+                }
+            }
+        }
     }
 
     reactObjectOnPlayer(obj)

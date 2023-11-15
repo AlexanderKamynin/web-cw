@@ -230,6 +230,25 @@ export class MapManager
         }
     }
 
+    drawEnemies(enemies, context)
+    {
+        if(enemies)
+        {
+            let sprite = this.spriteManager.getSprite('enemy');
+            let tsx = this.tileSize.x;
+            let tsy = this.tileSize.y;
+            for(let idx = 0; idx < enemies.length; idx++)
+            {
+                const enemy = enemies[idx];
+                let spritePos = this.spriteManager.defineDirectionInSprite(enemy.getDirection());
+                let enemyPos = enemy.getPosition();
+
+                context.drawImage(sprite, spritePos.column * tsx, spritePos.row * tsx, tsx, tsy,
+                    enemyPos.x, enemyPos.y, tsx, tsy);
+            }
+        }
+    }
+
     getTile(tileIdx)
     {
         let tile = {
