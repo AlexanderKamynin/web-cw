@@ -74,6 +74,7 @@ export class GameManager
         this.gameCycle = setInterval(() => {
             this.finishGameChecks();
             this.physicsManager.moveEnemies();
+            this.physicsManager.tryEnemiesAttack();
             this.render();
         }, 1000/60);
         this.audioManager.playBackground();
@@ -91,8 +92,30 @@ export class GameManager
     finishGame()
     {
         this.isGameOver = true;
+
+        //убираем все интервалы
         clearInterval(this.gameCycle);
         clearInterval(this.physicsManager.movementChecker);
+
+        //отрисовываем background
+        let columnInSprite = 0;
+        //отрисуем смэрть игрока
+        const defeatAnimation = setInterval(() => {
+            this.canvas_context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.canvas_context.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
+            this.mapManager.drawObjects(this.gameObjects, this.canvas_context);
+            this.mapManager.drawEnemies(this.enemies, this.canvas_context);
+            this.mapManager.drawPlayerDefeat(columnInSprite, this.player, this.canvas_context);
+            columnInSprite++;
+            if(columnInSprite > 2){
+                clearInterval(defeatAnimation);
+            }
+        }, 250);
+
+        //останавливаем фоновую музыку, включаем звук конца =(
+        this.audioManager.stopBackground();
+        this.audioManager.playGameOver();
+        console.log('game over');
     }
 
     render()

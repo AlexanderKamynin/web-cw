@@ -45,6 +45,11 @@ export class Player extends IGameObject
         return this.health;
     }
 
+    getDamage()
+    {
+        return this.damage;
+    }
+
     getDirection()
     {
         return this.direction;
@@ -72,12 +77,17 @@ export class Player extends IGameObject
     {
         this.health += healEffect;
     }
+
+    underHit(enemyDamage)
+    {
+        this.health -= enemyDamage;
+    }
 }
 
 
 export class Enemy extends IGameObject
 {
-    constructor(x, y, health, damage, direction=SPRITE_DIRECTIONS.DOWN_TWO, speed=1)
+    constructor(x, y, health, damage, direction=SPRITE_DIRECTIONS.DOWN_TWO, speed=2)
     {
         super(x,y);
         this.health = health;
@@ -89,6 +99,11 @@ export class Enemy extends IGameObject
     getSpeed()
     {
         return this.speed;
+    }
+
+    getDamage()
+    {
+        return this.damage;
     }
 
     getHealth()
@@ -117,6 +132,11 @@ export class Enemy extends IGameObject
         else {
             this.direction = direction.sprite_directions[Math.floor(direction.sprite_directions.length / 2)]; // получаем центральный спрайт в данном направлении как начальный
         }
+    }
+
+    underHit(playerDamage)
+    {
+        this.health -= playerDamage;
     }
 }
 

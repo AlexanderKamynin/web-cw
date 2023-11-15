@@ -230,6 +230,18 @@ export class MapManager
         }
     }
 
+    drawPlayerDefeat(columnInSprite, player, context)
+    {
+            let sprite = this.spriteManager.getSprite('playerDefeat');
+            let tsx = this.tileSize.x;
+            let tsy = this.tileSize.y;
+
+            let playerPos = player.getPosition();
+
+            context.drawImage(sprite, columnInSprite * tsx, 0, tsx, tsy,
+                playerPos.x, playerPos.y, tsx, tsy);
+    }
+
     drawEnemies(enemies, context)
     {
         if(enemies)

@@ -1,7 +1,7 @@
 import { MapManager } from "./mapManager";
 import { EventManager } from "./eventManager";
 import { Player } from "./gameObjects";
-import { DIRECTIONS, SOUND_EFFECTS } from "./const";
+import { DIRECTIONS, SOUND_EFFECTS, VISIBLE_DISTANCE, ATTACK_DISTANCE } from "./const";
 
 
 export class PhysicsManager 
@@ -106,28 +106,65 @@ export class PhysicsManager
         {
             let enemyX = this.enemies[idx].getPosition().x;
             let enemyY = this.enemies[idx].getPosition().y;
-            //как-то нужно вычислять target position
+
             let targetX = this.player.getPosition().x;
             let targetY = this.player.getPosition().y;
 
-            if(enemyX !== targetX || enemyY !== targetY)
+            
+            //если игрок в некоторой зоне видимости
+            if(PhysicsManager.getDistance(enemyX, enemyY, targetX, targetY) < VISIBLE_DISTANCE)
             {
-                if(enemyX < targetX) // двигаемся вправо
+
+                if(enemyX !== targetX || enemyY !== targetY)
                 {
-                    this.moveEntity(this.enemies[idx], "d");
+                    const distanceX = Math.abs(enemyX - targetX);
+                    const distanceY = Math.abs(enemyY - targetY);
+                    
+                    // Выбираем направление в зависимости от эвристики
+                    if (distanceX > distanceY) 
+                    {
+                        // Приоритет движения по горизонтали
+                        if (enemyX < targetX) {
+                            this.moveEntity(this.enemies[idx], 'd');
+                        } 
+                        else 
+                        {
+                            this.moveEntity(this.enemies[idx], 'a');
+                        }
+                    }
+                    else 
+                    {
+                        // Приоритет движения по вертикали
+                        if (enemyY > targetY) {
+                            this.moveEntity(this.enemies[idx], 'w');
+                        } 
+                        else 
+                        {
+                            this.moveEntity(this.enemies[idx], 's');
+                        }
+                    }
                 }
-                else if(enemyY > targetY) // движемся наверх
-                {
-                    this.moveEntity(this.enemies[idx], "w");
-                }
-                else if(enemyX > targetX) // двигаемся влево
-                {
-                    this.moveEntity(this.enemies[idx], "a");
-                }
-                else if(enemyY < targetY) // двигаемся вниз
-                {
-                    this.moveEntity(this.enemies[idx], "s");
-                }
+            }
+        }
+    }
+
+    tryEnemiesAttack()
+    {
+        for(let idx = 0; idx < this.enemies.length; idx++)
+        {
+            //получаем центр врага
+            let enemyX = this.enemies[idx].getPosition().x + this.tileSize.x / 2;
+            let enemyY = this.enemies[idx].getPosition().y + this.tileSize.y / 2;
+
+            //получаем центр игрока
+            let targetX = this.player.getPosition().x + this.tileSize.x / 2;
+            let targetY = this.player.getPosition().y + this.tileSize.y / 2;
+
+            if(PhysicsManager.getDistance(enemyX, enemyY, targetX, targetY) <= ATTACK_DISTANCE) 
+            {
+                //пиздить чела
+                this.player.underHit(this.enemies[idx].getDamage());
+                this.healthPrint(this.player.getHealth());
             }
         }
     }

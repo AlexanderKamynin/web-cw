@@ -9,7 +9,8 @@ export class SpriteManager
         this.spritesSrc = {
             heal: IMG_PATH + "img/heal.png",
             player: IMG_PATH + "img/player.png",
-            enemy: IMG_PATH + "img/enemy.png"
+            enemy: IMG_PATH + "img/enemy.png",
+            playerDefeat: IMG_PATH + "img/player_defeat.png"
         }
 
         this.sprites = {};
@@ -34,6 +35,12 @@ export class SpriteManager
         this.sprites['enemy'].src = this.spritesSrc['enemy'];
         this.sprites['heal'].onload = function() {
             console.log("Enemy sprite загружен");
+        }
+
+        this.sprites['playerDefeat'] = new Image();
+        this.sprites['playerDefeat'].src = this.spritesSrc['playerDefeat'];
+        this.sprites['playerDefeat'].onload = function() {
+            console.log("Player-defeat sprite загружен");
         }
     }
 
