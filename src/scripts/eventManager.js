@@ -10,6 +10,9 @@ export class EventManager
             83: { key: "s", isPressed: false},
             68: { key: "d", isPressed: false}
         }
+        this.actionKeys = {
+            70: {key: "f"}
+        };
 
         document.body.addEventListener("keydown", this.onKeyPressed.bind(this));
         document.body.addEventListener("keyup", this.onKeyUp.bind(this));

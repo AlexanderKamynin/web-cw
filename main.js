@@ -11,6 +11,7 @@ class Engine
         this.gameManager = new GameManager();
 
         this.startGameButton = document.querySelector(".start_game");
+        this.gameInformation = document.querySelector(".game_info");
     }
 
     async start()
@@ -18,6 +19,9 @@ class Engine
         await this.gameManager.init();
 
         this.startGameButton.addEventListener("click", async() => {
+            this.startGameButton.style.visibility = "hidden";
+            this.gameInformation.style.visibility = "visible";
+            
             await this.gameManager.startGame();
         });
 

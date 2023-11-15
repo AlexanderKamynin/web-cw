@@ -26,7 +26,7 @@ export class IGameObject
 
 export class Player extends IGameObject 
 {
-    constructor(x, y, health, damage, direction=SPRITE_DIRECTIONS.DOWN_TWO, speed=2)
+    constructor(x, y, health, damage, direction=SPRITE_DIRECTIONS.DOWN_TWO, speed=4)
     {
         super(x,y);
         this.health = health;
@@ -38,6 +38,11 @@ export class Player extends IGameObject
     getSpeed()
     {
         return this.speed;
+    }
+
+    getHealth()
+    {
+        return this.health;
     }
 
     getDirection()
@@ -89,5 +94,17 @@ export class HealObject extends IGameObject
     {
         super(x,y);
         this.healEffect = healEffect;
+        this.shouldDestroy = false;
+    }
+
+    getHealEffect()
+    {
+        this.shouldDestroy = true;
+        return this.healEffect;
+    }
+
+    isShouldDestroy()
+    {
+        return this.shouldDestroy;
     }
 }

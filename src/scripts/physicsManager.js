@@ -5,7 +5,7 @@ import { DIRECTIONS } from "./const";
 
 export class PhysicsManager 
 {
-    constructor(mapSize, tileSize, eventManager, gameObjects, player)
+    constructor(mapSize, tileSize, eventManager, gameObjects, player, healthPrint)
     {
         this.tileSize = tileSize;
         this.mapSize = mapSize;
@@ -13,6 +13,7 @@ export class PhysicsManager
         this.gameObjects = gameObjects;
         this.player = player;
 
+        this.healthPrint = healthPrint;
         this.eventManager = eventManager;
         this.movementChecker = setInterval(
             () => {
@@ -79,10 +80,37 @@ export class PhysicsManager
     {
         let newXDown = newX + this.tileSize.x;
         let newYDown = newY + this.tileSize.y;
-        if(this.isCollision(newX, newY, newXDown, newYDown) || this.isOutMap(newX, newY, newXDown, newYDown)){
+        if(this.isOutMap(newX, newY, newXDown, newYDown)){
             return false;
         }
+
+        let objCollision = this.isCollision(newX, newY, newXDown, newYDown);
+        if(objCollision){
+            this.reactObjectOnPlayer(objCollision);
+            return false;
+        }
+
         return true;
+    }
+
+    reactObjectOnPlayer(obj)
+    {
+        console.log(obj);
+        if(obj.name === 'interior')
+        {
+            return;
+        }
+        if(obj.name === "heal")
+        {
+            let healEffect = obj.obj.getHealEffect();
+            this.player.makeHeal(healEffect);
+            this.healthPrint(this.player.getHealth());
+            if(obj.obj.isShouldDestroy()){
+                this.removeGameObject(obj.obj);
+            }
+        }
+
+        return;
     }
 
     isOutMap(newX, newY, newXDown, newYDown)
@@ -108,7 +136,7 @@ export class PhysicsManager
 
                 if(this.isSquareIntersection(x, y, newXdown, newYdown, objPosX + epsilon, objPosY + epsilon, objPosX + this.tileSize.x - epsilon, objPosY + this.tileSize.y - 2 * epsilon))
                 {
-                    return true;
+                    return {name: objType, obj: this.gameObjects[objType][idx]};
                 }
             }
         }
@@ -131,6 +159,11 @@ export class PhysicsManager
         return true; // Проекции пересекаются по обеим осям
     }
 
+    static getDistance(xA, yA, xB, yB)
+    {
+        return Math.sqrt(Math.pow(xA - xB, 2) + Math.pow(yA - yB, 2));
+    }
+
     getObjectCenter(objX, objY)
     {
         return {
@@ -148,6 +181,22 @@ export class PhysicsManager
         else
         {
             throw `No such gameObject type ${objName}`;
+        }
+    }
+
+    removeGameObject(obj)
+    {
+        for(let objTypeIdx = 0; objTypeIdx < Object.keys(this.gameObjects).length; objTypeIdx++)
+        {
+            const objType = Object.keys(this.gameObjects)[objTypeIdx];
+
+            for(let idx = 0; idx < this.gameObjects[objType].length; idx++)
+            {
+                if(this.gameObjects[objType][idx] === obj)
+                {
+                    this.gameObjects[objType].splice(idx, 1);
+                }
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ import { EventManager } from "./eventManager";
 import { PhysicsManager } from "./physicsManager";
 import { MapManager } from "./mapManager";
 import { SpriteManager } from "./spriteManager";
+import { AudioManager } from "./audioManager";
 import { IMG_PATH } from "./const";
 
 
@@ -13,6 +14,7 @@ export class GameManager
         //managers
         this.eventManager = new EventManager();
         this.spriteManager = new SpriteManager();
+        this.audioManager = new AudioManager();
         this.mapManager = new MapManager(this.spriteManager);
         this.background = new Image();
         this.background.src = IMG_PATH + 'img/level1.png';
@@ -26,6 +28,11 @@ export class GameManager
         this.isGameOver = false;
         this.isMapInit = false;
 
+        //simple printers for html
+        this.healthPrint = (health) => {
+            document.querySelector('.health').innerText = `${health}`;
+        };
+
         //draw settings
         this.canvas = document.querySelector(".playground_map");
         this.canvas_context = this.canvas.getContext("2d");
@@ -35,6 +42,7 @@ export class GameManager
     {
         await this.mapManager.init();
         this.initGameObjects(this.mapManager.parseGameObjects());
+        this.healthPrint(this.player.getHealth());
 
         //check that all okey
         console.log(this.mapManager);
@@ -55,14 +63,31 @@ export class GameManager
         //for logs
         console.log('start game');
 
-        this.physicsManager = new PhysicsManager(this.mapManager.getMapSize(), this.mapManager.getTileSize(), this.eventManager, this.gameObjects, this.player);
+        this.physicsManager = new PhysicsManager(this.mapManager.getMapSize(), this.mapManager.getTileSize(), this.eventManager, this.gameObjects, this.player,
+        this.healthPrint);
         console.log(this.physicsManager);
 
         this.isGameOver = false;
         this.gameCycle = setInterval(() => {
-            //проверка, что все изображение стирается
+            this.finishGameChecks();
             this.render();
         }, 1000/60);
+    }
+
+    finishGameChecks()
+    {
+        //check that player is live
+        if(this.player.health <= 0)
+        {
+            this.finishGame();
+        }
+    }
+
+    finishGame()
+    {
+        this.isGameOver = true;
+        clearInterval(this.gameCycle);
+        clearInterval(this.physicsManager.movementChecker);
     }
 
     render()
