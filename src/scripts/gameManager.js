@@ -55,7 +55,7 @@ export class GameManager
         //for logs
         console.log('start game');
 
-        this.physicsManager = new PhysicsManager(this.mapManager.getTileSize(), this.eventManager, this.gameObjects, this.player);
+        this.physicsManager = new PhysicsManager(this.mapManager.getMapSize(), this.mapManager.getTileSize(), this.eventManager, this.gameObjects, this.player);
         console.log(this.physicsManager);
 
         this.isGameOver = false;

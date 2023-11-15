@@ -5,9 +5,10 @@ import { DIRECTIONS } from "./const";
 
 export class PhysicsManager 
 {
-    constructor(tileSize, eventManager, gameObjects, player)
+    constructor(mapSize, tileSize, eventManager, gameObjects, player)
     {
         this.tileSize = tileSize;
+        this.mapSize = mapSize;
 
         this.gameObjects = gameObjects;
         this.player = player;
@@ -33,16 +34,6 @@ export class PhysicsManager
                 }
             }, 1000/60
         );
-    }
-
-    update()
-    {
-
-    }
-
-    objectAtPosition(object)
-    {
-
     }
 
     movePlayer(moveKey)
@@ -88,10 +79,19 @@ export class PhysicsManager
     {
         let newXDown = newX + this.tileSize.x;
         let newYDown = newY + this.tileSize.y;
-        if(this.isCollision(newX, newY, newXDown, newYDown)){
+        if(this.isCollision(newX, newY, newXDown, newYDown) || this.isOutMap(newX, newY, newXDown, newYDown)){
             return false;
         }
         return true;
+    }
+
+    isOutMap(newX, newY, newXDown, newYDown)
+    {
+        if(newX < 0 || newY < 0 || newXDown >= this.mapSize.x || newYDown >= this.mapSize.y)
+        {
+            return true;
+        }
+        return false;
     }
 
     isCollision(x, y, newXdown, newYdown)
