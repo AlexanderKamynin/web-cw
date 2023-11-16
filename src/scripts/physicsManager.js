@@ -1,7 +1,7 @@
 import { MapManager } from "./mapManager";
 import { EventManager } from "./eventManager";
-import { Player } from "./gameObjects";
-import { DIRECTIONS, VISIBLE_DISTANCE, ATTACK_DISTANCE, PLAYER_ATTACK_DISTANCE } from "./const";
+import { Enemy, Player } from "./gameObjects";
+import { DIRECTIONS, VISIBLE_DISTANCE, ATTACK_DISTANCE, PLAYER_ATTACK_DISTANCE, ENEMY_CAN_ACROSS } from "./const";
 import { AudioManager } from "./audioManager";
 
 
@@ -111,6 +111,10 @@ export class PhysicsManager
             if(entity instanceof Player)
             {
                 this.reactObjectOnPlayer(objCollision);
+            }
+            if(entity instanceof Enemy && ENEMY_CAN_ACROSS.includes(objCollision.name))
+            {
+                return true;
             }
 
             return false;
