@@ -29,10 +29,21 @@ export class Player extends IGameObject
     constructor(x, y, health, damage, direction=SPRITE_DIRECTIONS.DOWN_TWO, speed=4)
     {
         super(x,y);
+        this.currentScore = 0;
         this.health = health;
         this.damage = damage;
         this.direction = direction;
         this.speed = speed;
+    }
+
+    getCurrentScore()
+    {
+        return this.currentScore;
+    }
+
+    addScore(score)
+    {
+        this.currentScore += score;
     }
 
     getSpeed()
@@ -154,6 +165,27 @@ export class HealObject extends IGameObject
     {
         this.shouldDestroy = true;
         return this.healEffect;
+    }
+
+    isShouldDestroy()
+    {
+        return this.shouldDestroy;
+    }
+}
+
+export class ScoreObject extends IGameObject
+{
+    constructor(x, y, score=10)
+    {
+        super(x,y);
+        this.score = score;
+        this.shouldDestroy = false;
+    }
+
+    getScore()
+    {
+        this.shouldDestroy = true;
+        return this.score;
     }
 
     isShouldDestroy()

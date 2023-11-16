@@ -51,10 +51,10 @@
                 4
             ],
             "scale": 0.75,
-            "selectedLayer": 1,
+            "selectedLayer": 6,
             "viewCenter": {
                 "x": 426.66666666666674,
-                "y": 464
+                "y": 462.66666666666663
             }
         },
         "level1.tmx#bonus": {
@@ -76,6 +76,9 @@
             "scaleInEditor": 1
         },
         "level1.tmx#player": {
+            "scaleInDock": 1
+        },
+        "level1.tmx#score": {
             "scaleInDock": 1
         }
     },

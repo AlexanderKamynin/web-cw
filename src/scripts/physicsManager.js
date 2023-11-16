@@ -7,7 +7,10 @@ import { AudioManager } from "./audioManager";
 
 export class PhysicsManager 
 {
-    constructor(context, mapSize, tileSize, eventManager, audioManager, gameObjects, player, enemies, healthPrint)
+    constructor(context, mapSize, tileSize,
+        eventManager, audioManager,
+        gameObjects, player, enemies,
+        healthPrint, scoresPrint)
     {
         this.context = context;
         this.tileSize = tileSize;
@@ -18,6 +21,7 @@ export class PhysicsManager
         this.enemies = enemies;
 
         this.healthPrint = healthPrint;
+        this.scoresPrint = scoresPrint;
 
         this.eventManager = eventManager;
         this.audioManager = audioManager;
@@ -115,6 +119,38 @@ export class PhysicsManager
         return true;
     }
 
+    reactObjectOnPlayer(obj)
+    {
+        if(obj.name === 'interior')
+        {
+            return;
+        }
+        if(obj.name === "heal")
+        {
+            let healEffect = obj.obj.getHealEffect();
+            this.player.makeHeal(healEffect);
+            this.audioManager.playSoundEffect(AudioManager.SOUND_EFFECTS.HEAL);
+            this.healthPrint(this.player.getHealth());
+            if(obj.obj.isShouldDestroy()){
+                this.removeGameObject(obj.obj);
+            }
+        }
+        if(obj.name === 'score')
+        {
+            let score = obj.obj.getScore();
+            this.player.addScore(score);
+            //TODO:audio
+            this.scoresPrint(this.player.getCurrentScore());
+            if(obj.obj.isShouldDestroy()){
+                this.removeGameObject(obj.obj);
+            }
+        }
+        
+
+        return;
+    }
+
+
     moveEnemies()
     {
         for(let idx = 0; idx < this.enemies.length; idx++)
@@ -207,26 +243,6 @@ export class PhysicsManager
                 this.healthPrint(this.player.getHealth());
             }
         }
-    }
-
-    reactObjectOnPlayer(obj)
-    {
-        if(obj.name === 'interior')
-        {
-            return;
-        }
-        if(obj.name === "heal")
-        {
-            let healEffect = obj.obj.getHealEffect();
-            this.player.makeHeal(healEffect);
-            this.audioManager.playSoundEffect(AudioManager.SOUND_EFFECTS.HEAL);
-            this.healthPrint(this.player.getHealth());
-            if(obj.obj.isShouldDestroy()){
-                this.removeGameObject(obj.obj);
-            }
-        }
-
-        return;
     }
 
     isOutMap(newX, newY, newXDown, newYDown)

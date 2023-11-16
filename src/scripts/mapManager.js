@@ -61,7 +61,8 @@ export class MapManager
                             let gameObj = {
                                 name: this.tileLayers[idx].layers[subLayerIdx].name,
                                 x: objX,
-                                y: objY
+                                y: objY,
+                                tileIdx: tileIdx
                             }
 
                             gameObjects.push(gameObj);
@@ -206,6 +207,16 @@ export class MapManager
                     //     context.drawImage(sprite, healObj.x, healObj.y, tsx, tsy);
                     // });
                     context.drawImage(sprite, healObj.x, healObj.y, tsx, tsy);
+                })
+            }
+            if(gameObjects.score)
+            {
+                gameObjects.score.forEach((scoreObj) => {
+                    let sprite = this.spriteManager.getSprite('score');
+                    let tsx = this.tileSize.x;
+                    let tsy = this.tileSize.y;
+
+                    context.drawImage(sprite, scoreObj.x, scoreObj.y, tsx, tsy);
                 })
             }
         }

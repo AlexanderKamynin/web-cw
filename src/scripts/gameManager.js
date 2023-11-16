@@ -1,4 +1,4 @@
-import { Player, HealObject, Enemy } from "./gameObjects";
+import { Player, HealObject, Enemy, ScoreObject } from "./gameObjects";
 import { EventManager } from "./eventManager";
 import { PhysicsManager } from "./physicsManager";
 import { MapManager } from "./mapManager";
@@ -25,6 +25,7 @@ export class GameManager
         //objects
         this.gameObjects = {};
         this.player = null;
+        this.scores = 0;
         this.enemies = [];
 
         this.level = 1;
@@ -34,6 +35,9 @@ export class GameManager
         //simple printers for html
         this.healthPrint = (health) => {
             document.querySelector('.health').innerText = `${health}`;
+        };
+        this.scoresPrint = (scores) => {
+            document.querySelector('.scores').innerHTML = `${scores}`;
         };
 
         //draw settings
@@ -67,8 +71,10 @@ export class GameManager
         //for logs
         console.log('start game');
 
-        this.physicsManager = new PhysicsManager(this.canvas_context, this.mapManager.getMapSize(), this.mapManager.getTileSize(), this.eventManager, this.audioManager, this.gameObjects, this.player,
-        this.enemies, this.healthPrint);
+        this.physicsManager = new PhysicsManager(this.canvas_context, this.mapManager.getMapSize(), this.mapManager.getTileSize(),
+            this.eventManager, this.audioManager,
+            this.gameObjects, this.player, this.enemies,
+            this.healthPrint, this.scoresPrint);
 
         console.log(this.physicsManager);
 
@@ -152,6 +158,7 @@ export class GameManager
 
     initGameObjects(gameObjects)
     {
+        console.log(gameObjects);
         for(let objIdx = 0; objIdx < gameObjects.length; objIdx++)
         {
             let newObject = gameObjects[objIdx];
@@ -159,7 +166,12 @@ export class GameManager
             {
                 case 'heal':
                     {
-                        newObject = new HealObject(gameObjects[objIdx].x, gameObjects[objIdx].y)
+                        newObject = new HealObject(gameObjects[objIdx].x, gameObjects[objIdx].y);
+                        break;
+                    }
+                case 'score':
+                    {
+                        newObject = new ScoreObject(gameObjects[objIdx].x, gameObjects[objIdx].y);
                         break;
                     }
                 case 'player':

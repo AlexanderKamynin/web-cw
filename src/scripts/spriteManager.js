@@ -10,7 +10,8 @@ export class SpriteManager
             player: IMG_PATH + "img/player.png",
             enemy: IMG_PATH + "img/enemy.png",
             playerDefeat: IMG_PATH + "img/player_defeat.png",
-            playerHit: IMG_PATH + "img/player_hit.png"
+            playerHit: IMG_PATH + "img/player_hit.png",
+            score: IMG_PATH + "img/score.png"
         }
 
         this.sprites = {};
@@ -47,6 +48,12 @@ export class SpriteManager
         this.sprites['playerHit'].src = this.spritesSrc['playerHit'];
         this.sprites['playerHit'].onload = function() {
             console.log("playerHit sprite загружен");
+        }
+
+        this.sprites['score'] = new Image();
+        this.sprites['score'].src = this.spritesSrc['score'];
+        this.sprites['score'].onload = function() {
+            console.log("score sprite загружен");
         }
     }
 
