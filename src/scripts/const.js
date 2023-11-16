@@ -60,7 +60,3 @@ export const DIRECTIONS = {
         ]
     }
 }
-
-export const SOUND_EFFECTS = {
-    HEAL: "heal"
-}

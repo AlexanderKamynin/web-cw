@@ -1,7 +1,8 @@
 import { MapManager } from "./mapManager";
 import { EventManager } from "./eventManager";
 import { Player } from "./gameObjects";
-import { DIRECTIONS, SOUND_EFFECTS, VISIBLE_DISTANCE, ATTACK_DISTANCE, PLAYER_ATTACK_DISTANCE } from "./const";
+import { DIRECTIONS, VISIBLE_DISTANCE, ATTACK_DISTANCE, PLAYER_ATTACK_DISTANCE } from "./const";
+import { AudioManager } from "./audioManager";
 
 
 export class PhysicsManager 
@@ -50,7 +51,7 @@ export class PhysicsManager
                 {
                     this.playerAttack();
                 }
-            }, 250
+            }, 50
         );
     }
 
@@ -182,6 +183,7 @@ export class PhysicsManager
                 if(this.enemies[idx].getHealth() <= 0)
                 {
                     this.removeEnemyByIdx(idx);
+                    this.audioManager.playSoundEffect(AudioManager.SOUND_EFFECTS.ENEMY_DEATH);
                 }
             }
         }
@@ -217,7 +219,7 @@ export class PhysicsManager
         {
             let healEffect = obj.obj.getHealEffect();
             this.player.makeHeal(healEffect);
-            this.audioManager.playSoundEffect(SOUND_EFFECTS.HEAL);
+            this.audioManager.playSoundEffect(AudioManager.SOUND_EFFECTS.HEAL);
             this.healthPrint(this.player.getHealth());
             if(obj.obj.isShouldDestroy()){
                 this.removeGameObject(obj.obj);
