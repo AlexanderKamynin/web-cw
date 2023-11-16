@@ -1,13 +1,14 @@
 import { MapManager } from "./mapManager";
 import { EventManager } from "./eventManager";
 import { Player } from "./gameObjects";
-import { DIRECTIONS, SOUND_EFFECTS, VISIBLE_DISTANCE, ATTACK_DISTANCE } from "./const";
+import { DIRECTIONS, SOUND_EFFECTS, VISIBLE_DISTANCE, ATTACK_DISTANCE, PLAYER_ATTACK_DISTANCE } from "./const";
 
 
 export class PhysicsManager 
 {
-    constructor(mapSize, tileSize, eventManager, audioManager, gameObjects, player, enemies, healthPrint)
+    constructor(context, mapSize, tileSize, eventManager, audioManager, gameObjects, player, enemies, healthPrint)
     {
+        this.context = context;
         this.tileSize = tileSize;
         this.mapSize = mapSize;
 
@@ -16,8 +17,13 @@ export class PhysicsManager
         this.enemies = enemies;
 
         this.healthPrint = healthPrint;
+
         this.eventManager = eventManager;
         this.audioManager = audioManager;
+
+        this.enemiesAttackCycle = setInterval(() => {
+            this.tryEnemiesAttack();
+        }, 250);
         this.movementChecker = setInterval(
             () => {
                 if(this.eventManager.moveKeys[EventManager.keyToNumber("w")].isPressed)
@@ -37,6 +43,14 @@ export class PhysicsManager
                     this.moveEntity(this.player, "d");
                 }
             }, 1000/60
+        );
+        this.playerAttackChecker = setInterval(
+            () => {
+                if(this.eventManager.actionKeys[EventManager.keyToNumber("f")].isPressed)
+                {
+                    this.playerAttack();
+                }
+            }, 250
         );
     }
 
@@ -148,6 +162,31 @@ export class PhysicsManager
         }
     }
 
+    playerAttack()
+    {
+        for(let idx = 0; idx < this.enemies.length; idx++)
+        {
+            //получаем центр врага
+            let enemyX = this.enemies[idx].getPosition().x + this.tileSize.x / 2;
+            let enemyY = this.enemies[idx].getPosition().y + this.tileSize.y / 2;
+
+            //получаем центр игрока
+            let targetX = this.player.getPosition().x + this.tileSize.x / 2;
+            let targetY = this.player.getPosition().y + this.tileSize.y / 2;
+
+            if(PhysicsManager.getDistance(enemyX, enemyY, targetX, targetY) <= PLAYER_ATTACK_DISTANCE)
+            {
+                this.enemies[idx].underHit(this.player.getDamage());
+                
+                //побили врага!
+                if(this.enemies[idx].getHealth() <= 0)
+                {
+                    this.removeEnemyByIdx(idx);
+                }
+            }
+        }
+    }
+
     tryEnemiesAttack()
     {
         for(let idx = 0; idx < this.enemies.length; idx++)
@@ -162,7 +201,6 @@ export class PhysicsManager
 
             if(PhysicsManager.getDistance(enemyX, enemyY, targetX, targetY) <= ATTACK_DISTANCE) 
             {
-                //пиздить чела
                 this.player.underHit(this.enemies[idx].getDamage());
                 this.healthPrint(this.player.getHealth());
             }
@@ -171,7 +209,6 @@ export class PhysicsManager
 
     reactObjectOnPlayer(obj)
     {
-        console.log(obj);
         if(obj.name === 'interior')
         {
             return;
@@ -274,6 +311,14 @@ export class PhysicsManager
                     this.gameObjects[objType].splice(idx, 1);
                 }
             }
+        }
+    }
+
+    removeEnemyByIdx(idx)
+    {
+        if(this.enemies)
+        {
+            this.enemies.splice(idx, 1);
         }
     }
 }

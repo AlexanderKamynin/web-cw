@@ -1,4 +1,3 @@
-import smartcrop from "smartcrop";
 import { IMG_PATH, SPRITE_DIRECTIONS } from "./const";
 
 
@@ -10,7 +9,8 @@ export class SpriteManager
             heal: IMG_PATH + "img/heal.png",
             player: IMG_PATH + "img/player.png",
             enemy: IMG_PATH + "img/enemy.png",
-            playerDefeat: IMG_PATH + "img/player_defeat.png"
+            playerDefeat: IMG_PATH + "img/player_defeat.png",
+            playerHit: IMG_PATH + "img/player_hit.png"
         }
 
         this.sprites = {};
@@ -41,6 +41,12 @@ export class SpriteManager
         this.sprites['playerDefeat'].src = this.spritesSrc['playerDefeat'];
         this.sprites['playerDefeat'].onload = function() {
             console.log("Player-defeat sprite загружен");
+        }
+
+        this.sprites['playerHit'] = new Image();
+        this.sprites['playerHit'].src = this.spritesSrc['playerHit'];
+        this.sprites['playerHit'].onload = function() {
+            console.log("playerHit sprite загружен");
         }
     }
 

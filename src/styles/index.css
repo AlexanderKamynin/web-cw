@@ -1,5 +1,12 @@
 
 
+body {
+    background-image: url('../tilesets/img/falling_snow.gif');
+    background-size:cover;
+    background-position: center;
+}
+
+
 canvas {
     margin: auto;
     height: calc(100dvh - 25px);

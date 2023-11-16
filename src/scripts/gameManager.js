@@ -11,6 +11,8 @@ export class GameManager
 {
     constructor()
     {
+        //handlers
+
         //managers
         this.eventManager = new EventManager();
         this.spriteManager = new SpriteManager();
@@ -65,7 +67,7 @@ export class GameManager
         //for logs
         console.log('start game');
 
-        this.physicsManager = new PhysicsManager(this.mapManager.getMapSize(), this.mapManager.getTileSize(), this.eventManager, this.audioManager, this.gameObjects, this.player,
+        this.physicsManager = new PhysicsManager(this.canvas_context, this.mapManager.getMapSize(), this.mapManager.getTileSize(), this.eventManager, this.audioManager, this.gameObjects, this.player,
         this.enemies, this.healthPrint);
 
         console.log(this.physicsManager);
@@ -74,9 +76,9 @@ export class GameManager
         this.gameCycle = setInterval(() => {
             this.finishGameChecks();
             this.physicsManager.moveEnemies();
-            this.physicsManager.tryEnemiesAttack();
             this.render();
         }, 1000/60);
+        
         this.audioManager.playBackground();
     }
 
@@ -95,7 +97,10 @@ export class GameManager
 
         //убираем все интервалы
         clearInterval(this.gameCycle);
+        clearInterval(this.physicsManager.enemiesAttackCycle);
         clearInterval(this.physicsManager.movementChecker);
+        clearInterval(this.physicsManager.playerAttackChecker);
+        clearInterval(this.isPlayerAttack);
 
         //отрисовываем background
         let columnInSprite = 0;
@@ -132,6 +137,17 @@ export class GameManager
         this.mapManager.drawObjects(this.gameObjects, this.canvas_context);
         this.mapManager.drawPlayer(this.player, this.canvas_context);
         this.mapManager.drawEnemies(this.enemies, this.canvas_context);
+
+        if(this.isMapInit){
+            this.isPlayerAttack = setInterval(
+                () => {
+                    if(this.eventManager.actionKeys[EventManager.keyToNumber("f")].isPressed)
+                    {
+                        this.mapManager.drawPlayerHit(this.player, this.canvas_context);
+                    }
+                }, 250
+            );
+        }
     }
 
     initGameObjects(gameObjects)

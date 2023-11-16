@@ -1,4 +1,4 @@
-import { IMG_PATH, MAP_PATH } from "./const";
+import { HIT_IMG_SIZE, IMG_PATH, MAP_PATH } from "./const";
 import { SpriteManager } from "./spriteManager";
 
 //
@@ -8,6 +8,7 @@ export class MapManager
     {
         this.mapJsonData = null;
         this.spriteManager = spriteManager;
+
         this.mapData = null;
         this.tileLayers = null;
         this.xCount = 0;
@@ -240,6 +241,17 @@ export class MapManager
 
             context.drawImage(sprite, columnInSprite * tsx, 0, tsx, tsy,
                 playerPos.x, playerPos.y, tsx, tsy);
+    }
+
+    drawPlayerHit(player, context)
+    {
+        let sprite = this.spriteManager.getSprite('playerHit');
+        let tsx = this.tileSize.x;
+        let tsy = this.tileSize.y;
+
+        let PlayerPos = player.getPosition();
+
+        context.drawImage(sprite, PlayerPos.x + tsx / 2, PlayerPos.y + tsy / 2, HIT_IMG_SIZE.x, HIT_IMG_SIZE.y);
     }
 
     drawEnemies(enemies, context)

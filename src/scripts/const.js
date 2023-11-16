@@ -4,6 +4,11 @@ export const IMG_PATH = "./src/tilesets/";
 export const AUDIO_PATH = "./src/audio/"
 export const VISIBLE_DISTANCE = 300;
 export const ATTACK_DISTANCE = 30;
+export const PLAYER_ATTACK_DISTANCE = 35;
+export const HIT_IMG_SIZE = {
+    x: 16,
+    y: 16
+};
 export const SPRITE_DIRECTIONS = {
     DOWN_ONE: 'DownOne',
     DOWN_TWO: 'DownTwo',
