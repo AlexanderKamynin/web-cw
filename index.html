@@ -1,28 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./src/styles/index.css" />
-    <title>cw</title>
-  </head>
-  <body>
-    <!--<h2>Лэтишный кошмарик</h2>-->
-    <button class="start_game">Старт</button>
+    <head>
+        <meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="./src/styles/login.css" />
+		<title>cw-login</title>
+    </head>
+<body>
+    <div class="main">
+        <input type="text" class="input_name" placeholder="name">
 
-    <!-- <div id="end_game_message">
-      <p>Вы попали на допсу</p>
-    </div> -->
-    
-    <div class="playground_box">
-      <canvas class="playground_map"></canvas>
-
-      <div class="game_info">
-        <p>Здоровье: <span class="health">100</span></p>
-        <p>Очки: <span class="scores">0</span></p>
-      </div>
+        <form class="login_form" action="./game.html">
+            <button class="start_button" type="submit">Начать игру</button> 
+        </form>
     </div>
 
-    <script type="module" src="./main.js"></script>
-  </body>
+    <script>
+        document.querySelector(".login_form").onsubmit = function() {
+            localStorage.setItem("name", document.querySelector(".input_name").value.toString());
+        }
+    </script>
+</body>
 </html>
