@@ -4,6 +4,7 @@ import { PhysicsManager } from "./physicsManager";
 import { MapManager } from "./mapManager";
 import { SpriteManager } from "./spriteManager";
 import { AudioManager } from "./audioManager";
+import { GameStorage } from "./storage";
 import { IMG_PATH } from "./const";
 
 
@@ -11,8 +12,6 @@ export class GameManager
 {
     constructor()
     {
-        //handlers
-
         //managers
         this.eventManager = new EventManager();
         this.spriteManager = new SpriteManager();
@@ -21,6 +20,8 @@ export class GameManager
         this.background = new Image();
         this.background.src = IMG_PATH + 'img/level1.png';
         this.physicsManager = null; //initialize with game starting
+
+        this.gameStorage = new GameStorage();
 
         //objects
         this.gameObjects = {};
@@ -127,6 +128,9 @@ export class GameManager
         this.audioManager.stopBackground();
         this.audioManager.playGameOver();
         console.log('game over');
+
+        //результат загружаем в таблицу
+        this.gameStorage.setScore(this.physicsManager.currentScore);
     }
 
     render()

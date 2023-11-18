@@ -7,7 +7,7 @@ export class GameStorage
         this.storage = localStorage;
     }
 
-    set_item(score)
+    setScore(score)
     {
         if(!this.storage.getItem("records_table"))
         {

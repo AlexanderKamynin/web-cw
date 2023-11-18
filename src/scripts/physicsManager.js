@@ -18,6 +18,7 @@ export class PhysicsManager
 
         this.gameObjects = gameObjects;
         this.player = player;
+        this.currentScore = 0;
         this.enemies = enemies;
 
         this.healthPrint = healthPrint;
@@ -142,9 +143,9 @@ export class PhysicsManager
         if(obj.name === 'score')
         {
             let score = obj.obj.getScore();
-            this.player.addScore(score);
+            this.currentScore += score;
             //TODO:audio
-            this.scoresPrint(this.player.getCurrentScore());
+            this.scoresPrint(this.currentScore);
             if(obj.obj.isShouldDestroy()){
                 this.removeGameObject(obj.obj);
             }

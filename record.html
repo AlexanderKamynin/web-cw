@@ -23,7 +23,7 @@
     <script>
         const table = JSON.parse(localStorage.getItem("records_table"));
         document.getElementById("records_table").innerHTML = `<ul> 
-            ${table.map((record) => `<li>${record.name} : ${record.scores} очков</li>`).join("")}
+            ${table.map((record) => `<li>${record.name} : ${record.score} очков</li>`).join("")}
         </ul>`;
 
         console.log(localStorage);
