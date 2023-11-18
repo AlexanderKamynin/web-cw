@@ -144,7 +144,7 @@ export class PhysicsManager
         {
             let score = obj.obj.getScore();
             this.currentScore += score;
-            //TODO:audio
+            this.audioManager.playSoundEffect(AudioManager.SOUND_EFFECTS.SCORE);
             this.scoresPrint(this.currentScore);
             if(obj.obj.isShouldDestroy()){
                 this.removeGameObject(obj.obj);
