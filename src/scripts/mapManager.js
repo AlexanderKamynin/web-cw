@@ -1,4 +1,4 @@
-import { HIT_IMG_SIZE, IMG_PATH, MAP_PATH } from "./const";
+import { HIT_IMG_SIZE, IMG_PATH } from "./const";
 import { SpriteManager } from "./spriteManager";
 
 //
@@ -18,11 +18,18 @@ export class MapManager
         this.tilesets = new Array();
 
         this.jsonLoaded = false;
+
+        this.backgrounds = {
+            1: new Image(),
+            2: new Image()
+        }
+        this.backgrounds[1].src = IMG_PATH + 'img/level1.png';
+        this.backgrounds[2].src = IMG_PATH + 'img/level1.png';
     }
 
-    async init()
+    async init(levelJsonPath)
     {
-        let response = await fetch(MAP_PATH);
+        let response = await fetch(levelJsonPath);
         this.mapJsonData = await response.json();
         this.parseMap(this.mapJsonData);
 
@@ -252,6 +259,17 @@ export class MapManager
 
             context.drawImage(sprite, columnInSprite * tsx, 0, tsx, tsy,
                 playerPos.x, playerPos.y, tsx, tsy);
+    }
+
+    drawFinish(finish, context)
+    {
+        let sprite = this.spriteManager.getSprite('finish');
+        let tsx = this.tileSize.x;
+        let tsy = this.tileSize.y;
+
+        let finishPos = finish.getPosition();
+
+        context.drawImage(sprite, finishPos.x, finishPos.y, tsx, tsy);
     }
 
     drawPlayerHit(player, context)

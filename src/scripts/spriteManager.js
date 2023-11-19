@@ -11,7 +11,8 @@ export class SpriteManager
             enemy: IMG_PATH + "img/enemy.png",
             playerDefeat: IMG_PATH + "img/player_defeat.png",
             playerHit: IMG_PATH + "img/player_hit.png",
-            score: IMG_PATH + "img/score.png"
+            score: IMG_PATH + "img/score.png",
+            finish: IMG_PATH + "img/finish.png"
         }
 
         this.sprites = {};
@@ -54,6 +55,12 @@ export class SpriteManager
         this.sprites['score'].src = this.spritesSrc['score'];
         this.sprites['score'].onload = function() {
             console.log("score sprite загружен");
+        }
+
+        this.sprites['finish'] = new Image();
+        this.sprites['finish'].src = this.spritesSrc['finish'];
+        this.sprites['finish'].onload = function() {
+            console.log("finish sprite загружен");
         }
     }
 

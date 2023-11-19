@@ -182,3 +182,11 @@ export class ScoreObject extends IGameObject
         return this.shouldDestroy;
     }
 }
+
+export class FinishObject extends IGameObject
+{
+    constructor(x, y)
+    {
+        super(x, y);
+    }
+}

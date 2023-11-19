@@ -1,4 +1,4 @@
-import { Player, HealObject, Enemy, ScoreObject } from "./gameObjects";
+import { Player, HealObject, Enemy, ScoreObject, FinishObject } from "./gameObjects";
 import { EventManager } from "./eventManager";
 import { PhysicsManager } from "./physicsManager";
 import { MapManager } from "./mapManager";
@@ -10,6 +10,16 @@ import { IMG_PATH } from "./const";
 
 export class GameManager
 {
+    static forNextLevelNeed = {
+        1: 20,
+        2: 50
+    };
+
+    static levelJsonPath = {
+        1: "/src/tilesets/level1.json",
+        2: "/src/tilesets/level1.json"
+    }
+
     constructor()
     {
         //managers
@@ -17,29 +27,47 @@ export class GameManager
         this.spriteManager = new SpriteManager();
         this.audioManager = new AudioManager();
         this.mapManager = new MapManager(this.spriteManager);
-        this.background = new Image();
-        this.background.src = IMG_PATH + 'img/level1.png';
         this.physicsManager = null; //initialize with game starting
-
         this.gameStorage = new GameStorage();
 
         //objects
         this.gameObjects = {};
         this.player = null;
-        this.scores = 0;
+        this.finish = null;
         this.enemies = [];
 
+        //game information
+        this.scores = [];
         this.level = 1;
+        this.currentLevelPassed = false;
+        this.showFinish = false;
+        this.isGameWon = false;
         this.isGameOver = false;
         this.isMapInit = false;
 
         //simple printers for html
+        this.levelPrint = (level) => {
+            document.querySelector('.level').innerHTML = `${level}`;
+        }
         this.healthPrint = (health) => {
             document.querySelector('.health').innerText = `${health}`;
         };
         this.scoresPrint = (scores) => {
             document.querySelector('.scores').innerHTML = `${scores}`;
         };
+
+        //слушатель на следующий уровень
+        this.goToNextLevel = async() => {
+            if(this.currentLevelPassed)
+            {
+                this.clearAllIntervals();
+                this.scores.push(this.getCurrentLevelScore());
+                this.level++;
+                this.audioManager.stopBackground();
+                await this.init();
+                document.querySelector(".start_game").style.visibility = "visible";
+            }
+        }
 
         //draw settings
         this.canvas = document.querySelector(".playground_map");
@@ -48,9 +76,16 @@ export class GameManager
 
     async init()
     {
-        await this.mapManager.init();
+        console.log('Текущий уровень ' + this.level);
+        //для следующего уровня
+        this.resetToDefault();
+
+        await this.mapManager.init(GameManager.levelJsonPath[this.level]);
         this.initGameObjects(this.mapManager.parseGameObjects());
+
         this.healthPrint(this.player.getHealth());
+        this.scoresPrint(this.scores.reduce((a, b) => a + b, 0));
+        this.levelPrint(this.level);
 
         //check that all okey
         console.log(this.mapManager);
@@ -63,7 +98,8 @@ export class GameManager
         this.canvas.height = this.mapManager.getMapSize().y;
 
         //первоначальная отрисовка
-        this.render(); 
+        this.canvas_context.drawImage(this.mapManager.backgrounds[this.level], 0, 0, this.canvas.width, this.canvas.height);
+        this.mapManager.drawPlayer(this.player, this.canvas_context);
         this.isMapInit = true;
     }
 
@@ -80,10 +116,12 @@ export class GameManager
         console.log(this.physicsManager);
 
         this.isGameOver = false;
+        const prevLevelScores = this.scores.reduce((a, b) => a + b, 0);
         this.gameCycle = setInterval(() => {
             this.finishGameChecks();
             this.physicsManager.moveEnemies();
             this.render();
+            this.scoresPrint(prevLevelScores + this.getCurrentLevelScore());
         }, 1000/60);
         
         this.audioManager.playBackground();
@@ -96,41 +134,71 @@ export class GameManager
         {
             this.finishGame();
         }
+
+        if(!this.showFinish && this.getCurrentLevelScore() >= GameManager.forNextLevelNeed[this.level])
+        {
+            this.showFinish = true;
+        }
+        if(this.getCurrentLevelScore() >= GameManager.forNextLevelNeed[this.level] && PhysicsManager.getDistance(this.player.getPosition().x, this.player.getPosition().y,
+            this.finish.getPosition().x, this.finish.getPosition().y) < this.mapManager.getTileSize().x) 
+            {
+                this.currentLevelPassed = true;
+            }
+        
+        if(this.level !== 2 && this.currentLevelPassed)
+        {
+            this.goToNextLevel();
+        }
+        else if(this.level === 2 && this.currentLevelPassed)
+        {
+            this.isGameWon = true;
+            this.finishGame();
+        }
     }
 
     finishGame()
     {
         this.isGameOver = true;
+        this.scores.push(this.getCurrentLevelScore());
 
         //убираем все интервалы
-        clearInterval(this.gameCycle);
-        clearInterval(this.physicsManager.enemiesAttackCycle);
-        clearInterval(this.physicsManager.movementChecker);
-        clearInterval(this.physicsManager.playerAttackChecker);
-        clearInterval(this.isPlayerAttack);
+        this.clearAllIntervals();
 
-        //отрисовываем background
-        let columnInSprite = 0;
-        //отрисуем смэрть игрока
-        const defeatAnimation = setInterval(() => {
-            this.canvas_context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.canvas_context.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
-            this.mapManager.drawObjects(this.gameObjects, this.canvas_context);
-            this.mapManager.drawEnemies(this.enemies, this.canvas_context);
-            this.mapManager.drawPlayerDefeat(columnInSprite, this.player, this.canvas_context);
-            columnInSprite++;
-            if(columnInSprite > 2){
-                clearInterval(defeatAnimation);
-            }
-        }, 250);
+        if(!this.isGameWon)
+        {
+            let columnInSprite = 0;
+            //отрисуем смэрть игрока
+            const defeatAnimation = setInterval(() => {
+                this.canvas_context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.canvas_context.drawImage(this.mapManager.backgrounds[this.level], 0, 0, this.canvas.width, this.canvas.height);
+                this.mapManager.drawObjects(this.gameObjects, this.canvas_context);
+                this.mapManager.drawEnemies(this.enemies, this.canvas_context);
+                this.mapManager.drawPlayerDefeat(columnInSprite, this.player, this.canvas_context);
+                columnInSprite++;
+                if(columnInSprite > 2){
+                    clearInterval(defeatAnimation);
+                }
+            }, 250);
+        }
 
         //останавливаем фоновую музыку, включаем звук конца =(
         this.audioManager.stopBackground();
-        this.audioManager.playGameOver();
+        if(!this.isGameWon)
+        {
+            this.audioManager.playGameOver();
+        }
+        else 
+        {
+            this.audioManager.playGameWon();
+        }
         console.log('game over');
 
         //результат загружаем в таблицу
-        this.gameStorage.setScore(this.physicsManager.currentScore);
+        console.log('Все очки за все уровни ' + this.scores);
+        this.gameStorage.setScore(this.scores.reduce((a, b) => a + b, 0));
+
+        //добавляем кнопку для возможности переиграть уровень
+        document.querySelector(".restart_game").style.visibility = "visible";
     }
 
     render()
@@ -143,8 +211,12 @@ export class GameManager
         //this.mapManager.drawInterior(this.canvas_context);
 
         //отрисовываем background
-        this.canvas_context.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
+        this.canvas_context.drawImage(this.mapManager.backgrounds[this.level], 0, 0, this.canvas.width, this.canvas.height);
         this.mapManager.drawObjects(this.gameObjects, this.canvas_context);
+        if(this.showFinish)
+        {
+            this.mapManager.drawFinish(this.finish, this.canvas_context);
+        }
         this.mapManager.drawPlayer(this.player, this.canvas_context);
         this.mapManager.drawEnemies(this.enemies, this.canvas_context);
 
@@ -183,9 +255,14 @@ export class GameManager
                         newObject = new Player(gameObjects[objIdx].x, gameObjects[objIdx].y, 100, 10);
                         break;
                     }
+                case 'finish':
+                    {
+                        newObject = new FinishObject(gameObjects[objIdx].x, gameObjects[objIdx].y);
+                        break;
+                    }
                 case 'enemy':
                     {
-                        newObject = new Enemy(gameObjects[objIdx].x, gameObjects[objIdx].y, 20, 1);
+                        newObject = new Enemy(gameObjects[objIdx].x, gameObjects[objIdx].y, 20, 5);
                         break;
                     }
                 default:
@@ -197,6 +274,12 @@ export class GameManager
             if(gameObjects[objIdx].name === 'player')
             {
                 this.player = newObject;
+                continue;
+            }
+
+            if(gameObjects[objIdx].name === 'finish')
+            {
+                this.finish = newObject;
                 continue;
             }
 
@@ -214,5 +297,41 @@ export class GameManager
                 this.gameObjects[gameObjects[objIdx].name].push(newObject);
             }
         }
+    }
+
+    getCurrentLevelScore()
+    {
+        return this.physicsManager.currentScore;
+    }
+
+    clearAllIntervals()
+    {
+        //убираем все интервалы
+        clearInterval(this.gameCycle);
+        clearInterval(this.physicsManager.enemiesAttackCycle);
+        clearInterval(this.physicsManager.movementChecker);
+        clearInterval(this.physicsManager.playerAttackChecker);
+        clearInterval(this.finishAnimation);
+        clearInterval(this.isPlayerAttack);
+    }
+
+    resetToDefault()
+    {
+        if(this.scores.length !== 0)
+        {
+            if(this.isGameOver === true)
+            {
+                this.scores.pop();
+            }
+        }
+        this.isGameWon = false;
+        this.isGameOver = false;
+        this.showFinish = false;
+        this.currentLevelPassed = false;
+        this.isMapInit = false;
+        this.gameObjects = {};
+        this.player = null;
+        this.finish = null;
+        this.enemies = [];
     }
 }

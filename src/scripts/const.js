@@ -1,5 +1,4 @@
 
-export const MAP_PATH = "/src/tilesets/level1.json";
 export const IMG_PATH = "./src/tilesets/";
 export const AUDIO_PATH = "./src/audio/"
 
@@ -67,5 +66,6 @@ export const DIRECTIONS = {
 }
 export const ENEMY_CAN_ACROSS = [
     "heal",
-    "score"
+    "score",
+    "finish"
 ]

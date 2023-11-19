@@ -1,7 +1,4 @@
-import { MapManager } from "./src/scripts/mapManager";
 import { GameManager } from "./src/scripts/gameManager";
-import { SpriteManager } from "./src/scripts/spriteManager";
-import { MAP_PATH } from "./src/scripts/const";
 
 
 class Engine
@@ -12,25 +9,25 @@ class Engine
 
         this.startGameButton = document.querySelector(".start_game");
         this.gameInformation = document.querySelector(".game_info");
+        this.restartGameButton = document.querySelector(".restart_game");
     }
 
     async start()
     {
         await this.gameManager.init();
+        this.restartGameButton.style.visibility = "hidden";
 
         this.startGameButton.addEventListener("click", async() => {
             this.startGameButton.style.visibility = "hidden";
-            this.gameInformation.style.visibility = "visible";
             
             await this.gameManager.startGame();
         });
 
-        document.addEventListener("finish", () => {
-            //checks when game finished
-            // 1. hero health < 0
-            // 2. all levels done
-            // 3. current level done (maybe restart?)
-        });
+        this.restartGameButton.addEventListener("click", async() => {
+            await this.gameManager.init();
+            this.restartGameButton.style.visibility = "hidden";
+            await this.gameManager.startGame();
+        })
     }
 }
 

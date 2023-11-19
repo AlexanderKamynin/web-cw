@@ -19,6 +19,7 @@ export class AudioManager
         this.enemyDeathEffect = new Audio(AUDIO_PATH + "enemy_death.mp3");
 
         this.gameOver = new Audio(AUDIO_PATH + "game_over.mp3");
+        this.gameWon = new Audio(AUDIO_PATH + "game_won.mp3");
     }
 
     playBackground()
@@ -29,6 +30,11 @@ export class AudioManager
     playGameOver()
     {
         this.gameOver.play();
+    }
+
+    playGameWon()
+    {
+        this.gameWon.play();
     }
 
     playSoundEffect(soundEffect)
