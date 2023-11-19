@@ -1,9 +1,12 @@
-
+* {
+    font-family: 'Ubuntu', sans-serif;
+}
 
 body {
     background-image: url('../tilesets/img/falling_snow.gif');
     background-repeat: no-repeat;
     background-size:cover;
+    color:azure;
 }
 
 
@@ -12,7 +15,13 @@ canvas {
     height: calc(100dvh - 25px);
     /* width: 100vh; */
     aspect-ratio: 1/1;
-    grid-area: can;
+    grid-area: canvas;
+}
+
+.help {
+    margin:auto;
+    font-size: 26px;
+    grid-area: left;
 }
 
 .playground_box {
@@ -26,8 +35,8 @@ canvas {
     align-items: center;
     flex-direction: column;
     gap: 10px;
-    font-size: 2rem;
-    grid-area: cont;
+    font-size: 26px;
+    grid-area: right;
 
 }
 .game_info p {
@@ -35,16 +44,21 @@ canvas {
 }
 
 .game_info button {
-    
-    font-size: 1.4rem;
+    background-color: azure;
+    font-size: 26px;
     border-radius: 5px;
     padding: 10px 20px;
     cursor: pointer;
-
+    transition: background-color 0.3s;
 }
+
+.game_info button:hover {
+    background-color: #dcdcdc;
+}
+
 
 .playground_box {
     display: grid;
     grid-template-columns: 1fr calc(100vh - 25px) 1fr;
-    grid-template-areas: ". can cont";
+    grid-template-areas: "left canvas right";
 }

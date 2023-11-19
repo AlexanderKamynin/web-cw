@@ -87,7 +87,7 @@ export class Player extends IGameObject
 
 export class Enemy extends IGameObject
 {
-    constructor(x, y, health, damage, direction=SPRITE_DIRECTIONS.DOWN_TWO, speed=2)
+    constructor(x, y, health, damage, speed=2, direction=SPRITE_DIRECTIONS.DOWN_TWO)
     {
         super(x,y);
         this.health = health;

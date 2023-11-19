@@ -24,7 +24,7 @@ export class MapManager
             2: new Image()
         }
         this.backgrounds[1].src = IMG_PATH + 'img/level1.png';
-        this.backgrounds[2].src = IMG_PATH + 'img/level1.png';
+        this.backgrounds[2].src = IMG_PATH + 'img/level2.png';
     }
 
     async init(levelJsonPath)

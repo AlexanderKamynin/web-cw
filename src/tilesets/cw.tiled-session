@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "level1.tmx",
+    "activeFile": "level2.json",
     "expandedProjectPaths": [
         "."
     ],
@@ -28,9 +28,15 @@
             "scale": 4,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 223.25,
-                "y": 120.25
+                "x": 222.75,
+                "y": 119.75
             }
+        },
+        "level1.json#enemy": {
+            "scaleInDock": 1
+        },
+        "level1.json#finish": {
+            "scaleInDock": 1
         },
         "level1.json#floor": {
             "scaleInDock": 1
@@ -46,6 +52,9 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "level1.json#score": {
+            "scaleInDock": 1
+        },
         "level1.tmx": {
             "expandedGroupLayers": [
                 4
@@ -53,8 +62,8 @@
             "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 617,
-                "y": 398
+                "x": 616,
+                "y": 397
             }
         },
         "level1.tmx#bonus": {
@@ -83,6 +92,38 @@
         },
         "level1.tmx#score": {
             "scaleInDock": 1
+        },
+        "level2.json": {
+            "expandedGroupLayers": [
+                7
+            ],
+            "scale": 0.75,
+            "selectedLayer": 7,
+            "viewCenter": {
+                "x": 491.99999999999994,
+                "y": 498.66666666666663
+            }
+        },
+        "level2.json#enemy": {
+            "scaleInDock": 1
+        },
+        "level2.json#finish": {
+            "scaleInDock": 1
+        },
+        "level2.json#floor": {
+            "scaleInDock": 1
+        },
+        "level2.json#heal": {
+            "scaleInDock": 1
+        },
+        "level2.json#interior1": {
+            "scaleInDock": 1
+        },
+        "level2.json#player": {
+            "scaleInDock": 1
+        },
+        "level2.json#score": {
+            "scaleInDock": 1
         }
     },
     "last.exportedFilePath": "C:/5_sem/WEB/cw/src/tilesets",
@@ -93,12 +134,13 @@
     "map.tileWidth": 48,
     "map.width": 20,
     "openFiles": [
-        "level1.tmx"
+        "level2.json"
     ],
     "project": "cw.tiled-project",
     "recentFiles": [
-        "level1.tmx",
+        "level2.json",
         "level1.json",
+        "level1.tmx",
         "interior1.tsx"
     ],
     "tileset.embedInMap": true,

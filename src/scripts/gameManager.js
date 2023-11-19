@@ -17,7 +17,7 @@ export class GameManager
 
     static levelJsonPath = {
         1: "/src/tilesets/level1.json",
-        2: "/src/tilesets/level1.json"
+        2: "/src/tilesets/level2.json"
     }
 
     constructor()
@@ -262,7 +262,7 @@ export class GameManager
                     }
                 case 'enemy':
                     {
-                        newObject = new Enemy(gameObjects[objIdx].x, gameObjects[objIdx].y, 20, 5);
+                        newObject = this.generateEnemy(gameObjects[objIdx]);
                         break;
                     }
                 default:
@@ -304,6 +304,37 @@ export class GameManager
         return this.physicsManager.currentScore;
     }
 
+    static getRandomNumber(a, b)
+    {
+        return Math.floor(Math.random() * (b - a + 1)) + a;
+    }
+
+    generateEnemy(position)
+    {
+        const x = position.x;
+        const y = position.y;
+        let damage = 1;
+        let health = 20;
+        let speed = 2;
+
+        switch(this.level)
+        {
+            case 1:
+                damage = GameManager.getRandomNumber(1, 10);
+                health = GameManager.getRandomNumber(20, 30);
+                speed = GameManager.getRandomNumber(2,3);
+                break;
+            case 2: 
+                damage = GameManager.getRandomNumber(5, 15);
+                health = GameManager.getRandomNumber(30, 40);
+                speed = GameManager.getRandomNumber(4,7);
+                break;
+        }
+
+        let enemy = new Enemy(x,y,health,damage,speed);
+        return enemy;
+    }
+    
     clearAllIntervals()
     {
         //убираем все интервалы

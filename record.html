@@ -4,19 +4,25 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="./src/styles/record.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;500;700&family=Ubuntu&display=swap" rel="stylesheet">
 		<title>cw-record</title>
 	</head>
 <body>
     <div id="main">
-        <form class="restart_form" action="./game.html">
-            <button class="restart" type="submit">Переиграть</button>
-        </form>
 
-        <form class="new_game" action="./index.html">
-            <button class="new_game" type="submit">Новая игра</button>
-        </form>
+        <div id="content">
+            <form class="restart_form" action="./game.html">
+                <button class="restart" type="submit">Переиграть</button>
+            </form>
 
-        <div id="records_table"></div>
+            <form class="new_game" action="./index.html">
+                <button class="new_game" type="submit">Новая игра</button>
+            </form>
+
+            <div id="records_table"></div>
+        </div>
 
     </div>
 

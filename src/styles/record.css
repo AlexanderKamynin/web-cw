@@ -1,0 +1,54 @@
+* {
+    padding: 0;
+    margin: 0px;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+body {
+    background-image: url('../tilesets/img/mount.jpg');
+    background-repeat: no-repeat;
+    background-size:cover;
+}
+
+#main {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: stretch;
+}
+
+#content {
+    margin-left: 10px;
+    margin-right: 10px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+button {
+    background-color: azure;
+    font-size: 26px;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #dcdcdc;
+}
+
+ul {
+    list-style-type: none;
+}
+
+
+li {
+    background-color: azure;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
