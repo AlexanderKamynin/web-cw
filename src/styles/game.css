@@ -1,0 +1,50 @@
+
+
+body {
+    background-image: url('../tilesets/img/falling_snow.gif');
+    background-repeat: no-repeat;
+    background-size:cover;
+}
+
+
+canvas {
+    margin: auto;
+    height: calc(100dvh - 25px);
+    /* width: 100vh; */
+    aspect-ratio: 1/1;
+    grid-area: can;
+}
+
+.playground_box {
+    display: flex;
+}
+
+.game_info {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 2rem;
+    grid-area: cont;
+
+}
+.game_info p {
+    margin: 0;
+}
+
+.game_info button {
+    
+    font-size: 1.4rem;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+
+}
+
+.playground_box {
+    display: grid;
+    grid-template-columns: 1fr calc(100vh - 25px) 1fr;
+    grid-template-areas: ". can cont";
+}

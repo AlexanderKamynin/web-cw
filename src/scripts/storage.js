@@ -13,23 +13,20 @@ export class GameStorage
         {
             localStorage.setItem("records_table", JSON.stringify([]));
         }
-
+        const userName = localStorage.getItem("name");
         let recordsTable = JSON.parse(this.storage.getItem("records_table"));
+
+        const userResult = recordsTable.find(({ name }) => name === userName ) || {name: userName };
+
+        recordsTable = recordsTable.filter(({name}) => name !== userName);
+        const userScore = Math.max(userResult?.score || 0, score);
+
         recordsTable.push({
-            name: this.storage.getItem("name"),
-            score: score
+            name: userName,
+            score: userScore
         });
         recordsTable.sort((a,b) => {
-            if(a.score > b.score)
-            {
-                return -1;
-            }
-            if(a.score < b.score)
-            {
-                return 1;
-            }
-
-            return 0;
+            return b.score - a.score;
         });
 
         while(recordsTable.length > MAX_RECORDS_SIZE)

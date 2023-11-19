@@ -3,25 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./src/styles/index.css" />
+    <link rel="stylesheet" href="./src/styles/game.css" />
     <title>cw</title>
   </head>
   <body>
     <!--<h2>Лэтишный кошмарик</h2>-->
-    <button class="start_game">Старт</button>
-    <button class="go_to_record" type="submit" onclick="window.location.href='./record.html'">Таблица рекордов</button>
 
     <!-- <div id="end_game_message">
       <p>Вы попали на допсу</p>
     </div> -->
-    
+
     <div class="playground_box">
       <canvas class="playground_map"></canvas>
 
       <div class="game_info">
+        <button class="start_game">Старт</button>
+        <button class="go_to_record" type="submit" onclick="window.location.href='./record.html'">Таблица рекордов</button>
+
         <p>Здоровье: <span class="health">100</span></p>
         <p>Очки: <span class="scores">0</span></p>
-        <p>Уровень: <span class="level">0</span></p>
+        <p>Уровень: <span class="level">1</span></p>
       </div>
     </div>
 
